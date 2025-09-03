@@ -260,7 +260,49 @@ I began my career developing web-based games for gaming portals for major teleco
 
   <section id="gamedev-tools">
     <h2>Game Dev Tools</h2>
-    <h3>1 - Time Stone Plugin</h3>
+    <h3>1 - Goap AI System</h3>
+    <p>
+    My implementation of a Goal-Oriented Action Planning (GOAP) system for Unreal Engine provides a powerful and flexible framework for creating intelligent AI. This plugin simplifies complex AI behaviors by allowing developers to define a set of simple actions, and the GOAP brain component automatically chains them together to achieve a specific goal. This system also includes a robust editor tool for debugging and visualizing the AI's decision-making process.
+    </p>
+   <h4>Key Features</h4>
+<ul>
+<li><strong>Modular AI Behavior:</strong> Instead of writing complex state machines, developers can create minimal, reusable "actions" (e.g., go to a location, play an animation). The GOAP brain component then uses a planner to intelligently chain these actions into a complete plan to achieve a desired goal.</li>
+<li><strong>Intuitive Setup with Gameplay Tags:</strong> The system uses Unreal's native Gameplay Tags to define goals, world states, and agent facts, ensuring a user-friendly setup and preventing spelling errors. By simply adding more actions to the available array, the AI's behavior becomes more sophisticated without any additional programming.</li>
+<li><strong>Dynamic Planning and Goal Prioritization:</strong> The GOAP brain dynamically creates a plan based on the current world state and the agent's facts. The system can also be configured to prioritize certain goals over others (e.g., harvesting mature crops before planting new ones), ensuring the AI's behavior is always relevant and efficient.</li>
+<li><strong>Built-in Debugging Tools:</strong> The plugin includes a comprehensive "Brain Inspector" editor tool that allows developers to visualize the AI's thought process. This tool displays the current plan, preconditions, and effects of each action, as well as a history of plans and tool tip over each action node giving failure results that are also customizable in the action class, making it easy to understand and troubleshoot AI behavior.</li>
+</ul>
+
+<p>
+This GOAP tool offers an efficient and scalable solution for building complex AI, allowing developers to focus on creating rich and believable agent behaviors with a minimal amount of effort.
+</p>
+<div class="tool-gallery">
+<div class="card">
+<div class="video-container" style="position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden;">
+<iframe
+style="position: absolute; top: 0; left: 0; width: 100%; height: 100%;"
+src="https://www.youtube.com/embed/4B6-KEeXjnE"
+title="GOAP System Showcase"
+frameborder="0"
+allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+allowfullscreen>
+</iframe>
+</div>
+</div>
+</div>
+
+<div class="tool-gallery">
+  <div class="card">
+    <img src="Resources/Goap1.png" alt="Riff XR SDK - Bone Mapping Step" class="zoomable">
+  </div>
+  <div class="card">
+    <img src="Resources/GoapHistory.png" alt="Riff XR SDK - Asset Generation Step" class="zoomable">
+  </div>
+  <div class="card">
+    <img src="Resources/GoapHistory2.png" alt="Riff XR SDK - Custom Animation Nodes" class="zoomable">
+  </div>
+</div>
+
+<h3>2 - Time Stone Plugin</h3>
 <p>
   A powerful gameplay plugin for Unreal Engine that gives developers a component-based system to manipulate time. The Time Stone Plugin allows for granular control over the flow of time, enabling mechanics like slowing, stopping, and rewinding the game world on a global or per-actor basis.
 </p>
@@ -292,7 +334,7 @@ I began my career developing web-based games for gaming portals for major teleco
   </div>
 </div>
 
-<h2>2- Arrows Missions System</h2>
+<h2>3- Arrows Missions System</h2>
 <p>
 A flexible and powerful mission system for Unreal Engine, the Arrows Missions System (AMS) provides an easy-to-use framework for creating complex in-game missions. It features a component-based design with dedicated classes for missions and actions, allowing developers to implement custom logic and streamline their workflow. The plugin's standout feature is its ability to save and load game progress, including the state of individual actors and mission objectives, ensuring a seamless experience for players.
 </p>
