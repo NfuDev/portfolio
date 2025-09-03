@@ -186,6 +186,7 @@ I began my career developing web-based games for gaming portals for major teleco
     A custom Unreal Engine editor extension developed for a VR MMORPG studio in Los Angeles.  
     This tool allows designers and developers to set up loot drops, analyze item distribution, and debug player inventory directly inside Unreal Engine.
   </p>
+  <h4>Key Features</h4>
   <ul>
     <li><strong>Loot & Drop Management:</strong> Define item drops, probabilities, and boss rewards with a visual interface.</li>
     <li><strong>Data Integration:</strong> Pulls backend server data into Unreal for real-time analysis.</li>
@@ -213,6 +214,7 @@ I began my career developing web-based games for gaming portals for major teleco
 <p>
   An Unreal Engine editor toolkit designed to streamline the user-generated content (UGC) pipeline for the VR rhythm game Riff XR. This SDK Assistant guides modders through a multi-step wizard, automating the complex setup of IK Rigs and Retargeters to make custom avatars game-ready.
 </p>
+<h4>Key Features</h4>
 <ul>
   <li><strong>Guided Setup Wizard:</strong> A step-by-step interface ("SDK Assistant") that walks creators through the entire process, from mesh preparation and bone mapping to final asset generation.</li>
   <li><strong>Automated Rig Generation:</strong> Analyzes the avatar's skeleton and automatically creates the required IKRig and IKRetargeter assets, a process that previously had to be done manually.</li>
@@ -239,6 +241,7 @@ I began my career developing web-based games for gaming portals for major teleco
 <p>
   A standalone C++ desktop application built with the wxWidgets framework to streamline the packaging and deployment of Unreal Engine plugins. Epic Games requires all marketplace plugins to be built via the command-line Build Automation Tool (UAT), so I created this application to provide a simple, powerful graphical interface for that process.
 </p>
+<h4>Key Features</h4>
 <ul>
   <li><strong>Centralized Plugin Management:</strong> Add, track, and manage all your Unreal Engine plugins in one place, complete with version numbers and build history.</li>
   <li><strong>One-Click UAT Builds:</strong> Package plugins with a single click, directly invoking Unreal's Build Automation Tool without needing to use the command line.</li>
@@ -307,8 +310,10 @@ allowfullscreen>
   A powerful gameplay plugin for Unreal Engine that gives developers a component-based system to manipulate time. The Time Stone Plugin allows for granular control over the flow of time, enabling mechanics like slowing, stopping, and rewinding the game world on a global or per-actor basis.
 </p>
 <p>
-  <strong>Find it on Fab :</strong><a> https://www.fab.com/listings/bc6bc034-87f1-43c1-8d79-c51c1f20023c</a>
+<strong>Find it on Fab :</strong> <a href="https://www.fab.com/listings/bc6bc034-87f1-43c1-8d79-c51c1f20023c" target="_blank">https://www.fab.com/listings/bc6bc034-87f1-43c1-8d79-c51c1f20023c</a>
 </p>
+
+<h4>Key Features</h4>
 <ul>
   <li><strong>Comprehensive Time Control:</strong> Easily implement slow-motion, pause, and rewind functionalities through a single, versatile component.</li>
   <li><strong>Actor Isolation System:</strong> Isolate specific characters or objects from the global timeline, allowing them to move at normal speed while the world around them is altered.</li>
@@ -339,6 +344,7 @@ allowfullscreen>
 A flexible and powerful mission system for Unreal Engine, the Arrows Missions System (AMS) provides an easy-to-use framework for creating complex in-game missions. It features a component-based design with dedicated classes for missions and actions, allowing developers to implement custom logic and streamline their workflow. The plugin's standout feature is its ability to save and load game progress, including the state of individual actors and mission objectives, ensuring a seamless experience for players.
 </p>
 
+<h4>Key Features</h4>
 <ul>
 <li><strong>Blueprintable Mission & Action Classes:</strong> The system includes blueprintable mission and action classes with predefined events (e.g., Mission Start, Mission End, Mission Tick) that users can easily hook into for custom logic.</li>
 <li><strong>Mission Tracking:</strong> A centralized mission tracker allows developers to monitor and manage all active missions in one place.</li>
@@ -376,6 +382,53 @@ allowfullscreen>
 </iframe>
 </div>
 </div>
+</div>
+
+<h3>4- Arrows Combat System</h3>
+
+<p>
+The Arrows Combat System is a powerful and versatile combat plugin for Unreal Engine that provides a feature-rich, out-of-the-box solution for implementing action-based combat. By simply adding a combat component to a character and assigning a pre-configured Fighting Style and Body Attributes, developers can instantly create a fully functional combat system complete with combos, parries, blocking, and damage detection without writing a single line of code.
+</p>
+<p>
+The system is designed to be highly customizable, allowing for complete control over the combat feel and flow.
+</p>
+<p>
+<strong>Find Documentation Here :</strong> <a href="https://github.com/NfuDev/ArrowsCombatSystem-Documentation/wiki" target="_blank">https://github.com/NfuDev/ArrowsCombatSystem-Documentation/wiki</a>
+</p>
+<h4>Key Features</h4>
+
+<ul>
+<li><strong>Component-Based Architecture:</strong> The entire system is built around a single component that handles all core combat logic, including input binding, damage handling, and animation-driven features like root motion and motion warping.</li>
+<li><strong>Highly Customizable Settings:</strong> A wide range of settings can be adjusted directly within the editor to fine-tune the combat experience. These include parameters for target filtering (e.g., "Nearest Target In Input Direction"), damage amounts, poise reduction, stun duration, and input handling.</li>
+<li><strong>Comprehensive Event System:</strong> The component provides a rich set of events to extend the system with custom logic. Developers can hook into events such as On Take Damage, On Got Parried, On Hit Counter Reset, and On Owner Got Executed to trigger unique game behaviors.</li>
+<li><strong>Built-in Mechanics:</strong> The plugin provides a complete suite of common combat mechanics right out of the box, including:
+<ul>
+<li>Automated Combo System</li>
+<li>Parry and Blocking</li>
+<li>Damage and Poise Detection</li>
+<li>Automated Root Motion and Motion Warping Setup</li>
+<li>Configurable Target Tracing and Directional Attacks</li>
+</ul>
+</li>
+</ul>
+
+<p>
+This tool provides the essential building blocks for creating satisfying and dynamic combat systems, saving countless hours of programming and allowing developers to focus on balancing and designing their gameplay experience.
+</p>
+
+<div class="tool-gallery">
+  <div class="card">
+    <img src="Resources/CombatCom1.png" alt="Combat System" class="zoomable">
+  </div>
+  <div class="card">
+    <img src="Resources/CombatCom2.png" alt="Combat System" class="zoomable">
+  </div>
+  <div class="card">
+    <img src="Resources/CombatCom3.png" alt="Combat System" class="zoomable">
+  </div>
+  <div class="card">
+    <img src="Resources/CombatCom4.png" alt="Combat System" class="zoomable">
+  </div>
 </div>
 
   </section>
