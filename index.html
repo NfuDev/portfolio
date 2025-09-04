@@ -24,6 +24,16 @@
     header h1 {
       font-size: 1.5rem;
       color: #00adb5;
+      display: flex;
+      align-items: center;
+    }
+    header h1 img {
+      height: 50px;       
+      width: 50px;       
+      border-radius: 50%;
+      object-fit: cover;  
+      margin-right: 15px; 
+      vertical-align: middle;
     }
     nav a {
       color: #e0e0e0;
@@ -131,15 +141,64 @@
     #next {
       right: 40px;
     }
+    
+    .video-container {
+      position: relative;
+      padding-bottom: 56.25%; /* 16:9 aspect ratio */
+      height: 0;
+      overflow: hidden;
+    }
+    
+    .video-container iframe {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+    }
 
-    header h1 img {
-    height: 50px;       
-    width: 50px;       
-    border-radius: 50%;
-    object-fit: cover;  
-    margin-right: 15px; 
-    vertical-align: middle;
-   }
+    /* Responsive CSS for mobile devices */
+    @media (max-width: 600px) {
+      header {
+        flex-direction: column;
+        text-align: center;
+        padding: 1rem;
+      }
+      header h1 {
+        font-size: 1.2rem;
+        flex-direction: column;
+      }
+      header h1 img {
+        margin-right: 0;
+        margin-bottom: 10px;
+      }
+      nav {
+        margin-top: 1rem;
+      }
+      nav a {
+        margin: 0.5rem 0.5rem;
+        display: inline-block;
+      }
+      section {
+        padding: 1rem;
+      }
+      .tool-gallery {
+        grid-template-columns: 1fr;
+      }
+      #lightbox #close {
+        top: 10px;
+        right: 20px;
+      }
+      .arrow {
+        font-size: 2rem;
+      }
+      #prev {
+        left: 20px;
+      }
+      #next {
+        right: 20px;
+      }
+    }
   </style>
 </head>
 <body>
@@ -387,7 +446,6 @@ allowfullscreen>
 <h3>4- Arrows Combat System</h3>
 
 <p>
-The Arrows Combat System is a powerful and versatile combat plugin for Unreal Engine that provides a feature-rich, out-of-the-box solution for implementing action-based combat. By simply adding a combat component to a character and assigning a pre-configured Fighting Style and Body Attributes, developers can instantly create a fully functional combat system complete with combos, parries, blocking, and damage detection without writing a single line of code.
 </p>
 <p>
 The system is designed to be highly customizable, allowing for complete control over the combat feel and flow.
@@ -689,7 +747,6 @@ This tool provides the essential building blocks for creating satisfying and dyn
     <p>© 2025 Othman Abdalla | Portfolio hosted on GitHub Pages</p>
   </footer>
 
-  <!-- Lightbox modal -->
   <div id="lightbox">
     <span id="close">&times;</span>
     <span id="prev" class="arrow">&#10094;</span>
