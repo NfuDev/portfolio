@@ -199,6 +199,21 @@
         right: 20px;
       }
     }
+  .steam-button {
+  display: inline-block;
+  padding: 10px 16px;
+  background: #1b2838;
+  color: #ffffff;
+  border-radius: 6px;
+  text-decoration: none;
+  font-weight: 600;
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.steam-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.25);
+}
   </style>
 </head>
 <body>
@@ -543,7 +558,33 @@ The system is designed to be user-friendly, allowing for complete control over w
 
   <section id="projects">
   <h2>Game Projects</h2>
-  <h3>1- Doshka</h3>
+  <h3>1- Riff XR</h3>
+  <p>
+    Riff XR is a cross-platform MMO RPG developed at Ron Revog (Los Angeles). I worked as a gameplay engineer on combat systems, RPG class mechanics, and internal tools, including leading development of the UGC SDK that enables player-created content. All gameplay abilities were implemented using Unreal Engine’s Gameplay Ability System (GAS).
+  </p>
+  <div class="tool-gallery">
+    <div class="card">
+      <div class="video-container" style="position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden;">
+        <iframe
+          style="position: absolute; top: 0; left: 0; width: 100%; height: 100%;"
+          src="https://www.youtube.com/watch?v=h7dTBFvw8MI"
+          title="Riff XR Trailer - A Next Gen VR MMORPG"
+          frameborder="0"
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+          allowfullscreen>
+        </iframe>
+      </div>
+    </div>
+  </div>
+          <a 
+            href="https://store.steampowered.com/app/2182790/Riff_XR/" 
+            target="_blank"
+            rel="noopener"
+            class="steam-button">
+            View on Steam
+        </a>
+
+  <h3>2- Doshka</h3>
   <p>
     This project began as a top-down beat 'em up game inspired by Sudanese culture, where a man fights against a corrupt militia. Over time, the game evolved through several iterations as I explored different styles and attempted to define its core identity.
   </p>
@@ -622,7 +663,7 @@ The system is designed to be user-friendly, allowing for complete control over w
     </div>
   </div>
 
-  <h3>2- Braid Clone</h3>
+  <h3>3- Braid Clone</h3>
   <p>
     This project was a technical demo to test the capabilities of my **Time Stone Plugin** by recreating the core mechanics of the famous puzzle platformer, *Braid*. The videos below showcase the development process, including the implementation of time-related mechanics.
   </p>
@@ -641,7 +682,7 @@ The system is designed to be user-friendly, allowing for complete control over w
     </div>
   </div>
 
-  <h3>3- Baba Is You Clone</h3>
+  <h3>4- Baba Is You Clone</h3>
   <p>
     This project is a clone of the critically acclaimed puzzle game *Baba Is You*, where players manipulate the rules of the game to solve puzzles. My implementation focused on replicating the core gameplay loop and rule-based logic.
   </p>
@@ -662,6 +703,42 @@ The system is designed to be user-friendly, allowing for complete control over w
       </div>
     </div>
   </div>
+
+  <h3>5- Golden Age</h3>
+<p>
+  Golden Age is a game I developed during a hackathon in the UAE in collaboration with Future Games, CD Projekt Red, and Games Ventures.
+</p>
+
+<div class="tool-gallery">
+  <div class="card">
+    <div class="video-container" style="position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden;">
+      <video
+        controls
+        autoplay
+        muted
+        loop
+        playsinline
+        style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover;">
+
+        <source src="Resources/Videos/MirrorsMechanicsHighlight.mp4" type="video/mp4">
+      </video>
+    </div>
+  </div>
+
+    <div class="card">
+    <div class="video-container" style="position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden;">
+      <video
+        controls
+        muted
+        loop
+        playsinline
+        style="position:absolute; top:0; left:0; width:100%; height:100%; object-fit:cover;">
+        <source src="Resources/Videos/GoldenAgeTrailler.mp4" type="video/mp4">
+      </video>
+    </div>
+  </div>
+
+</div>
 
   <h2>Random Game Mechanics</h2>
 
