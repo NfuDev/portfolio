@@ -963,19 +963,5 @@ The system is designed to be user-friendly, allowing for complete control over w
     });
   </script>
 
-<div align="center" style="margin-top: 50px; padding-bottom: 30px; opacity: 0.8; font-family: sans-serif; color: #888;">
-    <span id="stats">Total Visits: <span id="goatcounter-visit-count">...</span></span>
-  </div>
-
-  <script>
-      // This script fetches the count from GoatCounter and displays it
-      var t = setInterval(function() {
-          if (window.goatcounter && window.goatcounter.visit_count) {
-              clearInterval(t)
-              window.goatcounter.visit_count({append: '#goatcounter-visit-count', no_branding: true})
-          }
-      }, 100)
-  </script>
-  
 </body>
 </html>
