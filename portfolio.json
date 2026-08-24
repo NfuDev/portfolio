@@ -259,8 +259,8 @@
         "a project meant to showcase the features that the combat system is providing to users."
       ],
       "media": [
-        { "type": "youtube", "src": "https://youtu.be/I7W88kVUBwE", "title": "unnamed project, combo showcase" },
-        { "type": "youtube", "src": "https://youtu.be/p4pSuT-mjMk", "title": "unnamed project, Hit Reactiosn policies" },
+        { "type": "youtube", "src": "https://www.youtube.com/embed/I7W88kVUBwE", "title": "unnamed project, combo showcase" },
+        { "type": "youtube", "src": "https://www.youtube.com/embed/p4pSuT-mjMk", "title": "unnamed project, Hit Reactiosn policies" },
         { "type": "image", "src": "Resources/Shanfara1.png", "alt": "testing without outlines or toon shaders" },
         { "type": "image", "src": "Resources/Shanfara2.png", "alt": "testing without outlines or toon shaders 2" },
         { "type": "image", "src": "Resources/Shanfara3.png", "alt": "Stylized rendering- baked lighting in the character textures" },
