@@ -164,11 +164,12 @@
         "<strong>Out Of The Box Multiplyer Support:</strong> the combat works on single player and multiplayer out of the box no extra work needed."
       ],
       "media": [
+        { "type": "video", "src": "Resources/Videos/NewCombatTestV2.mp4", "autoplay": true },
+        { "type": "youtube", "src": "https://youtu.be/FZFTp6ObtQk", "title": "Arrows Combat System : multiplayer and more" },
         { "type": "image", "src": "Resources/CombatCom1.png", "alt": "Combat System 1" },
         { "type": "image", "src": "Resources/CombatCom2.png", "alt": "Combat System 2" },
         { "type": "image", "src": "Resources/CombatCom3.png", "alt": "Combat System 3" },
-        { "type": "image", "src": "Resources/CombatCom4.png", "alt": "Combat System 4" },
-        { "type": "video", "src": "Resources/Videos/NewCombatTestV2.mp4", "autoplay": true }
+        { "type": "image", "src": "Resources/CombatCom4.png", "alt": "Combat System 4" }   
       ]
     },
     {
@@ -252,32 +253,56 @@
       ]
     },
     {
+      "id": "proj-Shanfara",
+      "title": "UnNamed Demo",
+      "description": [
+        "a project meant to showcase the features that the combat system is providing to users."
+      ],
+      "media": [
+        { "type": "youtube", "src": "https://youtu.be/I7W88kVUBwE", "title": "unnamed project, combo showcase" },
+        { "type": "youtube", "src": "https://youtu.be/p4pSuT-mjMk", "title": "unnamed project, Hit Reactiosn policies" },
+        { "type": "image", "src": "Resources/Shanfara1.png", "alt": "testing without outlines or toon shaders" },
+        { "type": "image", "src": "Resources/Shanfara2.png", "alt": "testing without outlines or toon shaders 2" },
+        { "type": "image", "src": "Resources/Shanfara3.png", "alt": "Stylized rendering- baked lighting in the character textures" },
+        { "type": "image", "src": "Resources/Shanfara4.png", "alt": "Feet IK" },
+        { "type": "image", "src": "Resources/Shanfara5.png", "alt": "Death - facial animation close eyes, blood stains the player's clothes" },
+        { "type": "image", "src": "Resources/Shanfara6.png", "alt": "test different clothing fabrics" }
+      ]
+    },
+    {
       "id": "proj-mechanics",
       "title": "Random Game Mechanics",
       "subsections": [
         {
-          "title": "1 - Node-based Crafting System",
+          "title": "1 - AiliA : Walkable reflection mechanic",
+          "description": "AiliA is an indie puzzle game that has this cool mechanic , where you move a mirror and try to navigate a hard enviroment and collect stuff , and work with your reflection to do this , here in this video i wanted to remake it as a challenge.",
+          "media": [
+            { "type": "youtube", "src": "https://youtu.be/GUqfVXl3GEg", "title": "AiliA game reflection mechanic test" }
+          ]
+        },
+        {
+          "title": "2 - Node-based Crafting System",
           "description": "This crafting system was developed for a client's sci-fi game. The goal was to create a futuristic-looking interface that was both functional and visually unique. This node-based approach provides a clear and intuitive way for players to combine components.",
           "media": [
             { "type": "youtube", "src": "https://www.youtube.com/embed/G-YnRwNTrO0", "title": "Node-based Crafting System Showcase" }
           ]
         },
         {
-          "title": "2 - 3rd Person Portal Mechanic",
+          "title": "3 - 3rd Person Portal Mechanic",
           "description": "A demonstration of a 3rd person portal mechanic, showcasing the ability to seamlessly transport a character and objects between two points in the game world.",
           "media": [
             { "type": "youtube", "src": "https://www.youtube.com/embed/-NNZ1dFlDyA", "title": "3rd Person Portal Mechanic" }
           ]
         },
         {
-          "title": "3 - Old Boss Fight",
+          "title": "4 - Old Boss Fight",
           "description": "This video showcases an early-stage boss fight mechanic.",
           "media": [
             { "type": "youtube", "src": "https://www.youtube.com/embed/JPInAQrm6ig", "title": "Old Boss Fight Showcase" }
           ]
         },
         {
-          "title": "4 - VR sword fight mechanics",
+          "title": "5 - VR sword fight mechanics",
           "description": "This video showcases a work-in-progress demonstration of my combat system plugin integrated with my AI framework, featuring two AI agents engaged in a duel. It highlights the built-in deflection and parry mechanics that are core components of the combat system.",
           "media": [
             { "type": "youtube", "src": "https://www.youtube.com/embed/OADdPwLrYA0", "title": "VR sword fight mechanics" }
