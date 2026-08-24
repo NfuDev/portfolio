@@ -165,7 +165,7 @@
       ],
       "media": [
         { "type": "video", "src": "Resources/Videos/NewCombatTestV2.mp4", "autoplay": true },
-        { "type": "youtube", "src": "https://youtu.be/FZFTp6ObtQk", "title": "Arrows Combat System : multiplayer and more" },
+        { "type": "youtube", "src": "https://www.youtube.com/embed/FZFTp6ObtQk", "title": "Arrows Combat System : multiplayer and more" },
         { "type": "image", "src": "Resources/CombatCom1.png", "alt": "Combat System 1" },
         { "type": "image", "src": "Resources/CombatCom2.png", "alt": "Combat System 2" },
         { "type": "image", "src": "Resources/CombatCom3.png", "alt": "Combat System 3" },
@@ -277,7 +277,7 @@
           "title": "1 - AiliA : Walkable reflection mechanic",
           "description": "AiliA is an indie puzzle game that has this cool mechanic , where you move a mirror and try to navigate a hard enviroment and collect stuff , and work with your reflection to do this , here in this video i wanted to remake it as a challenge.",
           "media": [
-            { "type": "youtube", "src": "https://youtu.be/GUqfVXl3GEg", "title": "AiliA game reflection mechanic test" }
+            { "type": "youtube", "src": "https://www.youtube.com/embed/GUqfVXl3GEg", "title": "AiliA game reflection mechanic test" }
           ]
         },
         {
