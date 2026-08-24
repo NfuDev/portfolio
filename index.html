@@ -10,6 +10,9 @@
       font-family: "Segoe UI", Roboto, sans-serif;
       background-color: #121212;
       color: #e0e0e0;
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
     }
     header {
       background: #1e1e1e;
@@ -20,12 +23,14 @@
       position: sticky;
       top: 0;
       z-index: 10;
+      border-bottom: 1px solid #2a2a2a;
     }
     header h1 {
       font-size: 1.5rem;
       color: #00adb5;
       display: flex;
       align-items: center;
+      margin: 0;
     }
     header h1 img {
       height: 50px;       
@@ -35,30 +40,130 @@
       margin-right: 15px; 
       vertical-align: middle;
     }
-    nav a {
-      color: #e0e0e0;
-      margin: 0 1rem;
-      text-decoration: none;
-      font-weight: 500;
-      transition: color 0.3s;
+
+    /* Layout Wrapper */
+    .layout-wrapper {
+      display: flex;
+      flex: 1;
     }
-    nav a:hover {
+
+    /* Sidebar Navigation Panel - Fixed & Scrollable */
+    .sidebar {
+      width: 260px;
+      background: #1e1e1e;
+      padding: 1.5rem 1rem;
+      box-shadow: 2px 0 10px rgba(0,0,0,0.3);
+      flex-shrink: 0;
+      position: sticky;
+      top: 83px; /* Offset below sticky header */
+      height: calc(100vh - 83px);
+      overflow-y: auto;
+      box-sizing: border-box;
+    }
+
+    .sidebar-menu {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+
+    .sidebar-item {
+      margin-bottom: 0.4rem;
+    }
+
+    .sidebar-btn {
+      width: 100%;
+      background: transparent;
+      border: none;
+      color: #e0e0e0;
+      text-align: left;
+      padding: 0.75rem 1rem;
+      font-size: 1rem;
+      font-weight: 500;
+      font-family: inherit;
+      cursor: pointer;
+      border-radius: 6px;
+      transition: background 0.2s, color 0.2s;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      box-sizing: border-box;
+    }
+
+    .sidebar-btn:hover, .sidebar-btn.active {
+      background: #2a2a2a;
       color: #00adb5;
     }
-    section {
-      max-width: 1000px;
-      margin: 2rem auto;
-      padding: 1rem 2rem;
+
+    /* Dropdown Submenu */
+    .dropdown-container {
+      display: none;
+      list-style: none;
+      padding-left: 1rem;
+      margin: 0.3rem 0;
     }
+
+    .dropdown-container.open {
+      display: block;
+    }
+
+    .dropdown-container .sidebar-btn {
+      font-size: 0.92rem;
+      padding: 0.5rem 0.8rem;
+      color: #b0b0b0;
+    }
+
+    .dropdown-container .sidebar-btn:hover,
+    .dropdown-container .sidebar-btn.active {
+      color: #00adb5;
+      background: #262626;
+    }
+
+    .arrow-icon {
+      font-size: 0.75rem;
+      transition: transform 0.3s;
+    }
+
+    .dropdown-btn.open .arrow-icon {
+      transform: rotate(180deg);
+    }
+
+    /* Main Content Area */
+    .main-container {
+      flex: 1;
+      max-width: 1000px;
+      margin: 0 auto;
+      padding: 2rem;
+      width: 100%;
+      box-sizing: border-box;
+    }
+
+    .content-section {
+      display: none;
+    }
+
+    .content-section.active {
+      display: block;
+    }
+
     h2 {
       color: #00adb5;
       margin-bottom: 1rem;
+      margin-top: 0;
     }
+
+    h3, h4 {
+      color: #ffffff;
+    }
+
     .tool-gallery {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
       gap: 1.5rem;
+      margin-top: 1rem;
+      margin-bottom: 2rem;
     }
+
     .card {
       background: #1e1e1e;
       border-radius: 10px;
@@ -66,24 +171,23 @@
       box-shadow: 0 4px 10px rgba(0,0,0,0.4);
       transition: transform 0.2s;
     }
+
     .card:hover {
       transform: translateY(-5px);
       cursor: pointer;
     }
+
     .card img {
       max-width: 100%;
       border-radius: 8px;
     }
-    .card h3 {
-      margin: 0.5rem 0;
-      color: #ffffff;
-    }
+
     footer {
       text-align: center;
       padding: 1rem;
       background: #1e1e1e;
-      margin-top: 2rem;
       color: #888;
+      border-top: 1px solid #2a2a2a;
     }
 
     /* Lightbox overlay */
@@ -135,30 +239,50 @@
     .arrow:hover {
       color: #00adb5;
     }
-    #prev {
-      left: 40px;
-    }
-    #next {
-      right: 40px;
-    }
+    #prev { left: 40px; }
+    #next { right: 40px; }
     
     .video-container {
       position: relative;
-      padding-bottom: 56.25%; /* 16:9 aspect ratio */
+      padding-bottom: 56.25%;
       height: 0;
       overflow: hidden;
     }
     
     .video-container iframe {
       position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+    }
+
+    .steam-button {
+      display: inline-block;
+      padding: 10px 16px;
+      background: #1b2838;
+      color: #ffffff;
+      border-radius: 6px;
+      text-decoration: none;
+      font-weight: 600;
+      margin-top: 10px;
+      transition: transform 0.15s ease, box-shadow 0.15s ease;
+    }
+
+    .steam-button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.25);
     }
 
     /* Responsive CSS for mobile devices */
-    @media (max-width: 600px) {
+    @media (max-width: 768px) {
+      .layout-wrapper {
+        flex-direction: column;
+      }
+      .sidebar {
+        width: 100%;
+        position: static;
+        height: auto;
+        box-sizing: border-box;
+      }
       header {
         flex-direction: column;
         text-align: center;
@@ -172,14 +296,7 @@
         margin-right: 0;
         margin-bottom: 10px;
       }
-      nav {
-        margin-top: 1rem;
-      }
-      nav a {
-        margin: 0.5rem 0.5rem;
-        display: inline-block;
-      }
-      section {
+      .main-container {
         padding: 1rem;
       }
       .tool-gallery {
@@ -192,775 +309,278 @@
       .arrow {
         font-size: 2rem;
       }
-      #prev {
-        left: 20px;
-      }
-      #next {
-        right: 20px;
-      }
+      #prev { left: 20px; }
+      #next { right: 20px; }
     }
-  .steam-button {
-  display: inline-block;
-  padding: 10px 16px;
-  background: #1b2838;
-  color: #ffffff;
-  border-radius: 6px;
-  text-decoration: none;
-  font-weight: 600;
-  transition: transform 0.15s ease, box-shadow 0.15s ease;
-}
-
-.steam-button:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(0,0,0,0.25);
-}
   </style>
 </head>
 <body>
+
   <header>
     <h1><img src="Resources/Nightfall.png" alt="Yep this is me">Othman Abdalla - Nightfall16</h1>
-    <nav>
-      <a href="#about">About Me</a>
-      <a href="#editor-tools">Editor Tools</a>
-      <a href="#gamedev-tools">Game Dev Tools</a>
-      <a href="#projects">Game Projects</a>
-      <a href="#Art">My 3D Art</a>
-    </nav>
-
-    <script data-goatcounter="https://othman.goatcounter.com/count"
-          async src="//gc.zgo.at/count.js"></script>
-
+    <script data-goatcounter="https://othman.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
   </header>
 
-  <section id="about">
-<h2>About Me</h2>
-<p>
- Hi my name is Othman Abdalla , i am a self-taught C++ programmer and Civil Engineer by education, with <strong>11+ years of experience</strong> building tools and gameplay systems. My passion lies in solving complex technical challenges to create efficient workflows and engaging experiences for players.
-</p>
+  <div class="layout-wrapper">
+    <!-- Side Panel -->
+    <aside class="sidebar">
+      <ul class="sidebar-menu">
+        <li class="sidebar-item">
+          <button class="sidebar-btn active" onclick="showSection('about', this)">About Me</button>
+        </li>
 
-<h4>My Journey with Unreal Engine</h4>
-<p>
-After exploring various engines like Game Maker and Unity, I discovered Unreal Engine 3 (UDK) and was instantly hooked. I have been specializing in the Unreal ecosystem ever since, focusing on creating powerful editor tools and core game systems that empower creative teams.
-</p>
+        <li class="sidebar-item">
+          <button class="sidebar-btn dropdown-btn" onclick="toggleDropdown('editor-dropdown', this)">
+            <span>Editor Tools</span>
+            <span class="arrow-icon">&#9660;</span>
+          </button>
+          <ul class="dropdown-container" id="editor-dropdown"></ul>
+        </li>
 
-<h4>Early Career & Web Games</h4>
-<p>
-I began my career developing web-based games for gaming portals for major telecom companies in Sudan, including Sudani (Suda Play), Zain Sudan (Almees), and MTN. where users could play games using their mobile SIM card credits, which gave me a strong foundation in building and maintaining live service products like our current live service game 'RiffXR'.
-</p>
+        <li class="sidebar-item">
+          <button class="sidebar-btn dropdown-btn" onclick="toggleDropdown('gamedev-dropdown', this)">
+            <span>Game Dev Tools</span>
+            <span class="arrow-icon">&#9660;</span>
+          </button>
+          <ul class="dropdown-container" id="gamedev-dropdown"></ul>
+        </li>
 
-<h4>Nightfall the 3D artist</h4>
-<p>
-  At a time on my career i took a deep dive on creating game ready character models , for my personal projects and also as a freelancer on fiverr for 3 years.
-  until i reached <strong>Level One Seller</strong> . 
-</p>
+        <li class="sidebar-item">
+          <button class="sidebar-btn dropdown-btn" onclick="toggleDropdown('projects-dropdown', this)">
+            <span>Game Projects</span>
+            <span class="arrow-icon">&#9660;</span>
+          </button>
+          <ul class="dropdown-container" id="projects-dropdown"></ul>
+        </li>
 
-</section>
+        <li class="sidebar-item">
+          <button class="sidebar-btn" onclick="showSection('Art', this)">My 3D Art</button>
+        </li>
+      </ul>
+    </aside>
 
-  <section id="editor-tools">
-  <h2>Editor Tools</h2>
-
-  <h3>1 - TrashMobsTools</h3>
-  <p>
-    A custom Unreal Engine editor extension developed for a VR MMORPG studio in Los Angeles.  
-    This tool allows designers and developers to set up loot drops, analyze item distribution, and debug player inventory directly inside Unreal Engine.
-  </p>
-  <h4>Key Features</h4>
-  <ul>
-    <li><strong>Loot & Drop Management:</strong> Define item drops, probabilities, and boss rewards with a visual interface.</li>
-    <li><strong>Data Integration:</strong> Pulls backend server data into Unreal for real-time analysis.</li>
-    <li><strong>Item & Avatar Tools:</strong> Manage dropped items, avatars, and avatar parts with filtering and probability settings.</li>
-    <li><strong>Photo Studio:</strong> Generate high-quality item thumbnails/icons for consistent in-game UI.</li>
-    <li><strong>Account Analyzer:</strong> Debug player accounts by reviewing loot histories and drop reports.</li>
-  </ul>
-  <p>
-    This streamlined workflow eliminated the need for developers to switch between Unreal and external dashboards, significantly speeding up iteration and debugging.
-  </p>
-
-  <div class="tool-gallery">
-    <div class="card">
-      <img src="Resources/Trash mobs tool1.png" alt="Trash Mobs Tool Screenshot 1" class="zoomable">
-    </div>
-    <div class="card">
-      <img src="Resources/Trash mobs tool2.png" alt="Trash Mobs Tool Screenshot 2" class="zoomable">
-    </div>
-    <div class="card">
-      <img src="Resources/Trash mobs tool3.png" alt="Trash Mobs Tool Screenshot 3" class="zoomable">
-    </div>
+    <!-- Main Content Panel -->
+    <main class="main-container" id="main-content">
+      <!-- Section content dynamically populated from portfolio.json -->
+    </main>
   </div>
-
-  <h3>2 - Riff XR Avatar SDK</h3>
-<p>
-  An Unreal Engine editor toolkit designed to streamline the user-generated content (UGC) pipeline for the VR RPG game Riff XR. This SDK Assistant guides modders through a multi-step wizard, automating the complex setup of IK Rigs and Retargeters to make custom avatars game-ready.
-</p>
-<h4>Key Features</h4>
-<ul>
-  <li><strong>Guided Setup Wizard:</strong> A step-by-step interface ("SDK Assistant") that walks creators through the entire process, from mesh preparation and bone mapping to final asset generation.</li>
-  <li><strong>Automated Rig Generation:</strong> Analyzes the avatar's skeleton and automatically creates the required IKRig and IKRetargeter assets, a process that previously had to be done manually.</li>
-  <li><strong>Intuitive Bone Mapping:</strong> Provides a clear UI for mapping the custom avatar's skeleton to the Riff XR standard, with warnings and hints to help correct common setup issues.</li>
-  <li><strong>Custom VR Animation Nodes:</strong> Includes a dedicated suite of Animation Blueprint nodes like "RiffXR Hands Pose Generator" and "RiffXR Twist Control" to simplify hand posing and solve common arm twisting issues in VR.</li>
-</ul>
-<p>
-  By automating the technical rigging process, the SDK significantly lowers the barrier to entry for community creators, allowing them to focus on avatar design rather than complex engine setups.
-</p>
-
-<div class="tool-gallery">
-  <div class="card">
-    <img src="Resources/SDK1.png" alt="Riff XR SDK - Bone Mapping Step" class="zoomable">
-  </div>
-  <div class="card">
-    <img src="Resources/SDK2.png" alt="Riff XR SDK - Asset Generation Step" class="zoomable">
-  </div>
-  <div class="card">
-    <img src="Resources/SDK4.png" alt="Riff XR SDK - Custom Animation Nodes" class="zoomable">
-  </div>
-</div>
-
-<h3>3 - Unreal Engine Plugins Builder</h3>
-<p>
-  A standalone C++ desktop application built with the wxWidgets framework to streamline the packaging and deployment of Unreal Engine plugins. Epic Games requires all marketplace plugins to be built via the command-line Build Automation Tool (UAT), so I created this application to provide a simple, powerful graphical interface for that process.
-</p>
-<h4>Key Features</h4>
-<ul>
-  <li><strong>Centralized Plugin Management:</strong> Add, track, and manage all your Unreal Engine plugins in one place, complete with version numbers and build history.</li>
-  <li><strong>One-Click UAT Builds:</strong> Package plugins with a single click, directly invoking Unreal's Build Automation Tool without needing to use the command line.</li>
-  <li><strong>Multi-Version Engine Targeting:</strong> Easily select and build your plugins against different versions of Unreal Engine to ensure broad compatibility.</li>
-  <li><strong>Integrated Build Console:</strong> Monitor the entire packaging process in real-time with a built-in console that displays live output from UAT for quick debugging.</li>
-  <li><strong>Custom Build Arguments:</strong> Pass custom command-line arguments to the build process for advanced packaging requirements.</li>
-</ul>
-<p>
-  This tool eliminates the tedious and error-prone process of manual command-line builds, ensuring every plugin is packaged correctly for the marketplace and streamlining the release workflow.
-</p>
-
-<div class="tool-gallery">
-  <div class="card">
-    <img src="Resources/PluginsBuilder.png" alt="Unreal Engine Plugins Builder Interface" class="zoomable">
-  </div>
-</div>
-
-</section>
-
-  <section id="gamedev-tools">
-    <h2>Game Dev Tools</h2>
-    <h3>1 - Goap AI System</h3>
-    <p>
-    My implementation of a Goal-Oriented Action Planning (GOAP) system for Unreal Engine provides a powerful and flexible framework for creating intelligent AI. This plugin simplifies complex AI behaviors by allowing developers to define a set of simple actions, and the GOAP brain component automatically chains them together to achieve a specific goal. This system also includes a robust editor tool for debugging and visualizing the AI's decision-making process.
-    </p>
-   <h4>Key Features</h4>
-<ul>
-<li><strong>Modular AI Behavior:</strong> Instead of writing complex state machines, developers can create minimal, reusable "actions" (e.g., go to a location, play an animation). The GOAP brain component then uses a planner to intelligently chain these actions into a complete plan to achieve a desired goal.</li>
-<li><strong>Intuitive Setup with Gameplay Tags:</strong> The system uses Unreal's native Gameplay Tags to define goals, world states, and agent facts, ensuring a user-friendly setup and preventing spelling errors. By simply adding more actions to the available array, the AI's behavior becomes more sophisticated without any additional programming.</li>
-<li><strong>Dynamic Planning and Goal Prioritization:</strong> The GOAP brain dynamically creates a plan based on the current world state and the agent's facts. The system can also be configured to prioritize certain goals over others (e.g., harvesting mature crops before planting new ones), ensuring the AI's behavior is always relevant and efficient.</li>
-<li><strong>Built-in Debugging Tools:</strong> The plugin includes a comprehensive "Brain Inspector" editor tool that allows developers to visualize the AI's thought process. This tool displays the current plan, preconditions, and effects of each action, as well as a history of plans and tool tip over each action node giving failure results that are also customizable in the action class, making it easy to understand and troubleshoot AI behavior.</li>
-</ul>
-
-<p>
-This GOAP tool offers an efficient and scalable solution for building complex AI, allowing developers to focus on creating rich and believable agent behaviors with a minimal amount of effort.
-</p>
-<div class="tool-gallery">
-<div class="card">
-<div class="video-container" style="position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden;">
-<iframe
-style="position: absolute; top: 0; left: 0; width: 100%; height: 100%;"
-src="https://www.youtube.com/embed/4B6-KEeXjnE"
-title="GOAP System Showcase"
-frameborder="0"
-allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-allowfullscreen>
-</iframe>
-</div>
-</div>
-</div>
-
-<div class="tool-gallery">
-  <div class="card">
-    <img src="Resources/Goap1.png" alt="Riff XR SDK - Bone Mapping Step" class="zoomable">
-  </div>
-  <div class="card">
-    <img src="Resources/GoapHistory.png" alt="Riff XR SDK - Asset Generation Step" class="zoomable">
-  </div>
-  <div class="card">
-    <img src="Resources/GoapHistory2.png" alt="Riff XR SDK - Custom Animation Nodes" class="zoomable">
-  </div>
-</div>
-
-<h3>2 - Time Stone Plugin</h3>
-<p>
-  A powerful gameplay plugin for Unreal Engine that gives developers a component-based system to manipulate time. The Time Stone Plugin allows for granular control over the flow of time, enabling mechanics like slowing, stopping, and rewinding the game world on a global or per-actor basis.
-</p>
-<p>
-<strong>Find it on </strong> <a href="https://www.fab.com/listings/bc6bc034-87f1-43c1-8d79-c51c1f20023c" target="_blank">Fab</a>
-</p>
-
-<h4>Key Features</h4>
-<ul>
-  <li><strong>Comprehensive Time Control:</strong> Easily implement slow-motion, pause, and rewind functionalities through a single, versatile component.</li>
-  <li><strong>Actor Isolation System:</strong> Isolate specific characters or objects from the global timeline, allowing them to move at normal speed while the world around them is altered.</li>
-  <li><strong>"Ghost" Rewind System:</strong> The plugin's standout feature allows actors to spawn a "ghost" of their past selves after a rewind. This ghost replays the exact actions that were just rewound, creating a duplicate actor on the timeline.</li>
-  <li><strong>Braid-Inspired Puzzle Mechanics:</strong> This system makes it easy to create complex puzzles where the player must collaborate with their own past actions to overcome obstacles, inspired by the mechanics of the game Braid.</li>
-</ul>
-<p>
-  This tool provides developers with the core mechanics needed to build mind-bending puzzles and action sequences, saving countless hours of complex programming.
-</p>
-
-<div class="tool-gallery">
-  <div class="card">
-    <div class="video-container" style="position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden;">
-      <iframe 
-        style="position: absolute; top: 0; left: 0; width: 100%; height: 100%;"
-        src="https://www.youtube.com/embed/FtAAFcclclw" 
-        title="Time Stone Plugin Ghost Mechanic" 
-        frameborder="0" 
-        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
-        allowfullscreen>
-      </iframe>
-    </div>
-  </div>
-</div>
-
-<h3>3- Arrows Missions System</h3>
-<p>
-A flexible and powerful mission system for Unreal Engine, the Arrows Missions System (AMS) provides an easy-to-use framework for creating complex in-game missions. It features a component-based design with dedicated classes for missions and actions, allowing developers to implement custom logic and streamline their workflow. The plugin's provides its own system to save and load game progress, including the state of individual actors and mission objectives, ensuring a seamless experience for players.
-</p>
-
-<h4>Key Features</h4>
-<ul>
-<li><strong>Blueprintable Mission & Action Classes:</strong> The system includes blueprintable mission and action classes with predefined events (e.g., Mission Start, Mission End, Mission Tick) that users can easily hook into for custom logic.</li>
-<li><strong>Mission Tracking:</strong> A centralized mission tracker allows developers to monitor and manage all active missions in one place.</li>
-<li><strong>Persistent Game State:</strong> The system utilizes a payload to save and load mission progress, remembering the state of enemies and assets within the game, even after a player exits and reloads.</li>
-<li><strong>Dynamic Mission Control:</strong> The AMS can dynamically manage mission-related assets, automatically removing them from the game world once a mission is complete to prevent clutter.</li>
-<li><strong>Location-Based Missions:</strong> Easily create missions that are triggered or progressed based on the player's location.</li>
-</ul>
-
-<p>
-This tool simplifies the process of creating engaging and complex missions, saving countless hours of complex programming and ensuring a robust, customizable system for a variety of game genres.
-</p>
-
-<div class="tool-gallery">
-<div class="card">
-<div class="video-container" style="position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden;">
-<iframe
-style="position: absolute; top: 0; left: 0; width: 100%; height: 100%;"
-src="https://www.youtube.com/embed/kF8MRevGZ54"
-title="Arrows Missions System [AMS v1.0] Showcase"
-frameborder="0"
-allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-allowfullscreen>
-</iframe>
-</div>
-</div>
-<div class="card">
-<div class="video-container" style="position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden;">
-<iframe
-style="position: absolute; top: 0; left: 0; width: 100%; height: 100%;"
-src="https://www.youtube.com/embed/tQ2jLuQmo4M"
-title="Arrows Missions System Save and Load"
-frameborder="0"
-allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-allowfullscreen>
-</iframe>
-</div>
-</div>
-</div>
-
-<h3>4- Arrows Combat System</h3>
-
-<p>
-The Arrows Combat System is a powerful and versatile combat plugin for Unreal Engine that provides a feature-rich, out-of-the-box solution for implementing action-based combat. By simply adding a combat component to a character and assigning a pre-configured Fighting Style and Body Attributes, developers can instantly create a fully functional combat system complete with combos, parries, blocking, and damage detection without writing a single line of code.
-</p>
-<p>
-The system is designed to be highly customizable, allowing for complete control over the combat feel and flow.
-</p>
-<p>
-<strong>See the </strong> <a href="https://github.com/NfuDev/ArrowsCombatSystem-Documentation/wiki" target="_blank">Documentation</a>
-</p>
-<p>
-<strong>Also get it on</strong> <a href="https://www.fab.com/listings/19ba7cb7-9db4-4a09-80eb-753d76297232" target="_blank">Fab</a>
-</p>
-<h4>Key Features</h4>
-
-<ul>
-<li><strong>Component-Based Architecture:</strong> The entire system is built around a single component that handles all core combat logic, including input binding, damage handling, and animation-driven features like root motion and motion warping.</li>
-<li><strong>Highly Customizable Settings:</strong> A wide range of settings can be adjusted directly within the editor to fine-tune the combat experience. These include parameters for target filtering (e.g., "Nearest Target In Input Direction"), damage amounts, poise reduction, stun duration, and input handling.</li>
-<li><strong>Comprehensive Event System:</strong> The component provides a rich set of events to extend the system with custom logic. Developers can hook into events such as On Take Damage, On Got Parried, On Hit Counter Reset, and On Owner Got Executed to trigger unique game behaviors.</li>
-<li><strong>Built-in Mechanics:</strong> The plugin provides a complete suite of common combat mechanics right out of the box, including:
-<ul>
-<li>Automated Combo System</li>
-<li>Parry and Blocking</li>
-<li>Damage and Poise Detection</li>
-<li>Automated Root Motion and Motion Warping Setup</li>
-<li>Configurable Target Tracing and Directional Attacks</li>
-</ul>
-</li>
-</ul>
-
-<p>
-This tool provides the essential building blocks for creating satisfying and dynamic combat systems, saving countless hours of programming and allowing developers to focus on balancing and designing their gameplay experience.
-</p>
-
-<div class="tool-gallery">
-  <div class="card">
-    <img src="Resources/CombatCom1.png" alt="Combat System" class="zoomable">
-  </div>
-  <div class="card">
-    <img src="Resources/CombatCom2.png" alt="Combat System" class="zoomable">
-  </div>
-  <div class="card">
-    <img src="Resources/CombatCom3.png" alt="Combat System" class="zoomable">
-  </div>
-  <div class="card">
-    <img src="Resources/CombatCom4.png" alt="Combat System" class="zoomable">
-  </div>
-</div>
-
-<h3>5- Arrows Modio Integration Plugin</h3>
-
-<p>
-  Arrows Mod.io Integration provides seamless support for integrating mod.io into your project. It enables fetching and displaying mod lists, downloading mod files with progress tracking, and managing user ratings (like, dislike, and remove). The plugin also includes general-purpose .pak mounting logic for loading downloaded content at runtime. || shout out to the developer of pak loader(Blue Mountains GmbH) and zipit(Pandores) that i used to preform file operations
-</p>
-<p>
-The system is designed to be user-friendly, allowing for complete control over what data you pull from modio servers.
-</p>
-
-<h4>Key Features</h4>
-<ul>
-    <li><strong>Seamless Anonymous Authentication:</strong> The plugin uses an anonymous user authentication system powered by Epic Online Services (EOS), eliminating the need for users to create a separate Mod.io account to rate, download, or interact with mods. This dramatically lowers the barrier to entry and simplifies the user experience.</li>
-    <li><strong>Effortless Mod Integration:</strong> Users can easily browse, download, and manage a curated list of mods directly within your application. The plugin handles the entire lifecycle, from fetching the latest mod data via the Mod.io REST API to providing a simplified interface for interaction.</li>
-    <li><strong>Out-of-the-Box Mod Management:</strong> The plugin streamlines the entire modding process by automatically handling **zipped mod downloads, extraction, and mounting**. This removes the need for users to manually manage files, making the experience plug-and-play.</li>
-    <li><strong>Full Mod.io Functionality:</strong> Your plugin exposes all essential Mod.io features, allowing users to:
-        <ul>
-            <li>Browse and Filter: Discover mods with powerful search and filtering options.</li>
-            <li>Rate and Review: Authenticated users can rate and provide feedback on mods.</li>
-            <li>Subscribe and Unsubscribe: Easily manage their favorite mods.</li>
-            <li>Get Timely Updates: Automatically check for and apply mod updates.</li>
-        </ul>
-    </li>
-    <li><strong>Flexible and Customizable:</strong> The plugin's modular design allows developers to easily extend its functionality with custom logic. You can hook into the core API to create unique user interfaces or integrate mod content directly into your game's systems.</li>
-</ul>
-
-<div class="tool-gallery">
-  <div class="card">
-    <img src="Resources/Modio1.png" alt="Modio" class="zoomable">
-  </div>
-  <div class="card">
-     <img src="Resources/Modio2.png" alt="Modio" class="zoomable">
-  </div>
-  <div class="card">
-     <img src="Resources/Modio3.png" alt="Modio" class="zoomable">
-  </div>
-  <div class="card">
-    <img src="Resources/Modio4.png" alt="Modio" class="zoomable">
-  </div>
-   <div class="card">
-    <img src="Resources/modio5.png" alt="Modio" class="zoomable">
-  </div>
-   <div class="card">
-    <img src="Resources/Modio6.png" alt="Modio" class="zoomable">
-  </div>
-   <div class="card">
-    <img src="Resources/Modio7.png" alt="Modio" class="zoomable">
-  </div>
-</div>
-
-  </section>
-
-  <section id="projects">
-  <h2>Game Projects</h2>
-  <h3>1- Riff XR</h3>
-  <p>
-    Riff XR is a cross-platform MMO RPG developed at Ron Revog (Los Angeles). I worked as a gameplay engineer on combat systems, RPG class mechanics, and internal tools, including leading development of the UGC SDK that enables player-created content. All gameplay abilities were implemented using Unreal Engine’s Gameplay Ability System (GAS).
-  </p>
-  <div class="tool-gallery">
-    <div class="card">
-          <div class="video-container" style="position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden;">
-      <video
-        controls
-        autoplay
-        muted
-        loop
-        playsinline
-        style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover;">
-
-        <source src="Resources/Videos/RiffXR.mp4" type="video/mp4">
-      </video>
-    </div>
-    </div>
-  </div>
-          <a 
-            href="https://store.steampowered.com/app/2182790/Riff_XR/" 
-            target="_blank"
-            rel="noopener"
-            class="steam-button">
-            View on Steam
-        </a>
-
-  <h3>2- Doshka</h3>
-  <p>
-    This project began as a top-down beat 'em up game inspired by Sudanese culture, where a man fights against a corrupt militia. Over time, the game evolved through several iterations as I explored different styles and attempted to define its core identity.
-  </p>
-  <div class="tool-gallery">
-    <div class="card">
-      <div class="video-container" style="position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden;">
-        <iframe
-          style="position: absolute; top: 0; left: 0; width: 100%; height: 100%;"
-          src="https://www.youtube.com/embed/L4k9dYhBfDo"
-          title="Doshka - Top-down Beat 'em Up"
-          frameborder="0"
-          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-          allowfullscreen>
-        </iframe>
-      </div>
-    </div>
-    <div class="card">
-      <div class="video-container" style="position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden;">
-        <iframe
-          style="position: absolute; top: 0; left: 0; width: 100%; height: 100%;"
-          src="https://www.youtube.com/embed/ssGj4iS866w"
-          title="Doshka - 3rd Person Beat 'em Up"
-          frameborder="0"
-          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-          allowfullscreen>
-        </iframe>
-      </div>
-    </div>
-    <div class="card">
-      <div class="video-container" style="position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden;">
-        <iframe
-          style="position: absolute; top: 0; left: 0; width: 100%; height: 100%;"
-          src="https://www.youtube.com/embed/Z1wVWJ9A2GA"
-          title="Doshka - 3rd Person Sword Fighter"
-          frameborder="0"
-          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-          allowfullscreen>
-        </iframe>
-      </div>
-    </div>
-    <div class="card">
-      <div class="video-container" style="position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden;">
-        <iframe
-          style="position: absolute; top: 0; left: 0; width: 100%; height: 100%;"
-          src="https://www.youtube.com/embed/58SYyIuS_cI"
-          title="Doshka - Network Support"
-          frameborder="0"
-          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-          allowfullscreen>
-        </iframe>
-      </div>
-    </div>
-    <div class="card">
-      <div class="video-container" style="position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden;">
-        <iframe
-          style="position: absolute; top: 0; left: 0; width: 100%; height: 100%;"
-          src="https://www.youtube.com/embed/b0mlR-1IhOo"
-          title="Doshka - 3rd Person Shooter"
-          frameborder="0"
-          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-          allowfullscreen>
-        </iframe>
-      </div>
-    </div>
-    <div class="card">
-      <div class="video-container" style="position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden;">
-        <iframe
-          style="position: absolute; top: 0; left: 0; width: 100%; height: 100%;"
-          src="https://www.youtube.com/embed/up65acagZ2A"
-          title="Doshka - AI Perception Debugging"
-          frameborder="0"
-          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-          allowfullscreen>
-        </iframe>
-      </div>
-    </div>
-  </div>
-
-  <h3>3- Braid Clone</h3>
-  <p>
-    This project was a technical demo to test the capabilities of my **Time Stone Plugin** by recreating the core mechanics of the famous puzzle platformer, *Braid*. The videos below showcase the development process, including the implementation of time-related mechanics.
-  </p>
-  <div class="tool-gallery">
-    <div class="card">
-      <div class="video-container" style="position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden;">
-        <iframe
-          style="position: absolute; top: 0; left: 0; width: 100%; height: 100%;"
-          src="https://www.youtube.com/embed/EimKVK3l_dM"
-          title="Braid Movement Tutorial"
-          frameborder="0"
-          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-          allowfullscreen>
-        </iframe>
-      </div>
-    </div>
-  </div>
-
-  <h3>4- Baba Is You Clone</h3>
-  <p>
-    This project is a clone of the critically acclaimed puzzle game *Baba Is You*, where players manipulate the rules of the game to solve puzzles. My implementation focused on replicating the core gameplay loop and rule-based logic.
-  </p>
-  <p>
-    <strong>See </strong> <a href="https://github.com/NfuDev/BABA_IS_YOU_Refactored" target="_blank">Source Code</a>
-  </p>
-  <div class="tool-gallery">
-    <div class="card">
-      <div class="video-container" style="position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden;">
-        <iframe
-          style="position: absolute; top: 0; left: 0; width: 100%; height: 100%;"
-          src="https://www.youtube.com/embed/Ua4gZk7132g"
-          title="Baba Is You Clone Showcase"
-          frameborder="0"
-          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-          allowfullscreen>
-        </iframe>
-      </div>
-    </div>
-  </div>
-
-  <h3>5- Golden Age</h3>
-<p>
-  Golden Age is a game I developed during a hackathon in the UAE in collaboration with Future Games, CD Projekt Red, and Games Ventures.
-</p>
-
-<div class="tool-gallery">
-  <div class="card">
-    <div class="video-container" style="position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden;">
-      <video
-        controls
-        autoplay
-        muted
-        loop
-        playsinline
-        style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover;">
-
-        <source src="Resources/Videos/MirrorsMechanicsHighlight.mp4" type="video/mp4">
-      </video>
-    </div>
-  </div>
-
-    <div class="card">
-    <div class="video-container" style="position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden;">
-      <video
-        controls
-        muted
-        loop
-        playsinline
-        style="position:absolute; top:0; left:0; width:100%; height:100%; object-fit:cover;">
-        <source src="Resources/Videos/GoldenAgeTrailler.mp4" type="video/mp4">
-      </video>
-    </div>
-  </div>
-
-</div>
-
-  <h2>Random Game Mechanics</h2>
-
-  <h3>1 - Node-based Crafting System</h3>
-  <p>
-    This crafting system was developed for a client's sci-fi game. The goal was to create a futuristic-looking interface that was both functional and visually unique. This node-based approach provides a clear and intuitive way for players to combine components.
-  </p>
-  <div class="tool-gallery">
-    <div class="card">
-      <div class="video-container" style="position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden;">
-        <iframe
-          style="position: absolute; top: 0; left: 0; width: 100%; height: 100%;"
-          src="https://www.youtube.com/embed/G-YnRwNTrO0"
-          title="Node-based Crafting System Showcase"
-          frameborder="0"
-          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-          allowfullscreen>
-        </iframe>
-      </div>
-    </div>
-  </div>
-
-  <h3>2 - 3rd Person Portal Mechanic</h3>
-  <p>
-    A demonstration of a 3rd person portal mechanic, showcasing the ability to seamlessly transport a character and objects between two points in the game world.
-  </p>
-  <div class="tool-gallery">
-    <div class="card">
-      <div class="video-container" style="position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden;">
-        <iframe
-          style="position: absolute; top: 0; left: 0; width: 100%; height: 100%;"
-          src="https://www.youtube.com/embed/-NNZ1dFlDyA"
-          title="3rd Person Portal Mechanic"
-          frameborder="0"
-          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-          allowfullscreen>
-        </iframe>
-      </div>
-    </div>
-  </div>
-
-  <h3>3 - Old Boss Fight</h3>
-  <p>
-    This video showcases an early-stage boss fight mechanic.
-  </p>
-  <div class="tool-gallery">
-    <div class="card">
-      <div class="video-container" style="position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden;">
-        <iframe
-          style="position: absolute; top: 0; left: 0; width: 100%; height: 100%;"
-          src="https://www.youtube.com/embed/JPInAQrm6ig"
-          title="Old Boss Fight Showcase"
-          frameborder="0"
-          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-          allowfullscreen>
-        </iframe>
-      </div>
-    </div>
-  </div>
-
- <h3>4 - VR sword fight mechanics</h3>
-  <p>
-    This video showcases a work-in-progress demonstration of my combat system plugin integrated with my AI framework, featuring two AI agents engaged in a duel. It highlights the built-in deflection and parry mechanics that are core components of the combat system.
-  </p>
-  <div class="tool-gallery">
-    <div class="card">
-      <div class="video-container" style="position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden;">
-        <iframe
-          style="position: absolute; top: 0; left: 0; width: 100%; height: 100%;"
-          src="https://www.youtube.com/embed/OADdPwLrYA0"
-          title="VR sword fight mechanics"
-          frameborder="0"
-          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-          allowfullscreen>
-        </iframe>
-      </div>
-    </div>
-  </div>
-
-</section>
-
-   <section id="Art">
-    <h2>My 3D Art</h2>
-    <h3>Random character designs i made</h3>
-<div class="tool-gallery">
-    <div class="card">
-      <img src="Resources/Ayoob1.jpg" alt="Personal Project" class="zoomable">
-    </div>
-    <div class="card">
-      <img src="Resources/Ayoob2.jpg" alt="Personal Project" class="zoomable">
-    </div>
-    <div class="card">
-      <img src="Resources/Pirate1.jpg" alt="Peronal project" class="zoomable">
-    </div>
-    <div class="card">
-      <img src="Resources/Pirate2.jpg" alt="personal project" class="zoomable">
-    </div>
-    <div class="card">
-      <img src="Resources/Wizzard1.jpg" alt="Wizzard model for a client" class="zoomable">
-    </div>
-    <div class="card">
-      <img src="Resources/Wizzard2.jpg" alt="Wizzard model for a client" class="zoomable">
-    </div>
-       <div class="card">
-      <img src="Resources/Lion1.jpg" alt="Lion model for a client nft project" class="zoomable">
-    </div>
-    <div class="card">
-      <img src="Resources/Lion2.jpg" alt="Lion model for a client nft project" class="zoomable">
-    </div>
-  </div>
-  <h3>One Of fiverrs commissions</h3>
-  <p>the order was to make a package of lowpoly characters for an indie game , deadline was 1 week. i used various techneques to minimize the work and make them as fast as possible.</p>
-  <div class="tool-gallery">
-    <div class="card">
-      <img src="Resources/Pack1.jpg" alt="Fiverr" class="zoomable">
-    </div>
-    <div class="card">
-      <img src="Resources/Pack2.jpg" alt="Fiverr" class="zoomable">
-    </div>
-    <div class="card">
-      <img src="Resources/Pack3.jpg" alt="Fiverr" class="zoomable">
-    </div>
-    <div class="card">
-      <img src="Resources/Pack4.jpg" alt="Fiverr" class="zoomable">
-    </div>
-    <div class="card">
-      <img src="Resources/Pack5.jpg" alt="Fiverr" class="zoomable">
-    </div>
-    <div class="card">
-      <img src="Resources/Topology.jpg" alt="Fiverr" class="zoomable">
-    </div>
-  </div>
-
-   <h3>Fiverr Ratings</h3>
-  <p>this when i was still working on fiverr, i got the <strong>Level one seller</strong> and afterward managed to get <strong>fiverr choice</strong></p>
-  <div class="tool-gallery">
-    <div class="card">
-      <img src="Resources/LevelOneSeller.jpg" alt="Fiverr" class="zoomable">
-    </div>
-    <div class="card">
-      <img src="Resources/FiverChoice.jpg" alt="Fiverr" class="zoomable">
-    </div>
-    <div class="card">
-      <img src="Resources/FiverStars.jpg" alt="Fiverr" class="zoomable">
-    </div>
-  </div>
-
-  </section>
 
   <footer>
     <p>© 2025 Othman Abdalla | Portfolio hosted on GitHub Pages</p>
   </footer>
 
+  <!-- Lightbox Overlay -->
   <div id="lightbox">
     <span id="close">&times;</span>
     <span id="prev" class="arrow">&#10094;</span>
-    <img id="lightbox-img" src="">
+    <img id="lightbox-img" src="" alt="Zoomed view">
     <span id="next" class="arrow">&#10095;</span>
   </div>
 
   <script>
-    const zoomableImages = document.querySelectorAll('.zoomable');
-    const lightbox = document.getElementById('lightbox');
-    const lightboxImg = document.getElementById('lightbox-img');
-    const closeBtn = document.getElementById('close');
-    const prevBtn = document.getElementById('prev');
-    const nextBtn = document.getElementById('next');
+    // Navigation and Dropdown functionality
+    function showSection(sectionId, btn) {
+      const sections = document.querySelectorAll('.content-section');
+      sections.forEach(sec => sec.classList.remove('active'));
 
-    let currentIndex = 0;
+      const target = document.getElementById(sectionId);
+      if (target) {
+        target.classList.add('active');
+      }
 
-    function showImage(index) {
-      currentIndex = index;
-      lightboxImg.src = zoomableImages[currentIndex].src;
-      lightbox.style.display = 'flex';
+      const buttons = document.querySelectorAll('.sidebar-btn');
+      buttons.forEach(b => b.classList.remove('active'));
+      if (btn) btn.classList.add('active');
+      
+      window.scrollTo({ top: 0, behavior: 'smooth' });
     }
 
-    zoomableImages.forEach((img, index) => {
-      img.addEventListener('click', () => {
-        showImage(index);
+    function toggleDropdown(dropdownId, btn) {
+      const dropdown = document.getElementById(dropdownId);
+      dropdown.classList.toggle('open');
+      btn.classList.toggle('open');
+    }
+
+    // Dynamic Portfolio Loader
+    async function loadPortfolio() {
+      try {
+        const response = await fetch('portfolio.json');
+        const data = await response.json();
+        
+        renderAbout(data.about);
+        renderCategory('editor-dropdown', data.editorTools);
+        renderCategory('gamedev-dropdown', data.gameDevTools);
+        renderCategory('projects-dropdown', data.gameProjects);
+        renderArt('Art', data.art);
+
+        initLightbox();
+      } catch (err) {
+        console.error('Error loading portfolio.json:', err);
+      }
+    }
+
+    function renderAbout(about) {
+      const main = document.getElementById('main-content');
+      const section = document.createElement('section');
+      section.id = 'about';
+      section.className = 'content-section active';
+
+      let html = `<h2>${about.title}</h2>`;
+      about.paragraphs.forEach(p => { html += `<p>${p}</p>`; });
+      about.sections.forEach(s => {
+        html += `<h4>${s.heading}</h4><p>${s.content}</p>`;
       });
-    });
 
-    closeBtn.addEventListener('click', () => {
-      lightbox.style.display = 'none';
-    });
+      section.innerHTML = html;
+      main.appendChild(section);
+    }
 
-    prevBtn.addEventListener('click', () => {
-      currentIndex = (currentIndex - 1 + zoomableImages.length) % zoomableImages.length;
-      showImage(currentIndex);
-    });
+    function renderCategory(dropdownId, items) {
+      const dropdownContainer = document.getElementById(dropdownId);
+      const mainContainer = document.getElementById('main-content');
 
-    nextBtn.addEventListener('click', () => {
-      currentIndex = (currentIndex + 1) % zoomableImages.length;
-      showImage(currentIndex);
-    });
+      items.forEach(item => {
+        // Build Sidebar Button
+        const li = document.createElement('li');
+        li.innerHTML = `<button class="sidebar-btn" onclick="showSection('${item.id}', this)">${item.title}</button>`;
+        dropdownContainer.appendChild(li);
 
-    lightbox.addEventListener('click', (e) => {
-      if (e.target === lightbox) {
-        lightbox.style.display = 'none';
+        // Build Content Section
+        const section = document.createElement('section');
+        section.id = item.id;
+        section.className = 'content-section';
+
+        let html = `<h2>${item.title}</h2>`;
+
+        if (item.description) {
+          item.description.forEach(p => { html += `<p>${p}</p>`; });
+        }
+
+        if (item.links) {
+          item.links.forEach(l => {
+            const label = l.label ? `${l.label} ` : '';
+            const btnClass = l.class ? `class="${l.class}"` : '';
+            html += `<p>${label}<a href="${l.url}" target="_blank" rel="noopener" ${btnClass}>${l.text}</a></p>`;
+          });
+        }
+
+        if (item.features) {
+          html += `<h4>${item.featuresHeading || 'Key Features'}</h4><ul>`;
+          item.features.forEach(f => { html += `<li>${f}</li>`; });
+          html += `</ul>`;
+        }
+
+        if (item.subsections) {
+          item.subsections.forEach(sub => {
+            html += `<h3>${sub.title}</h3>`;
+            if (sub.description) html += `<p>${sub.description}</p>`;
+            if (sub.media) html += buildGallery(sub.media);
+          });
+        }
+
+        if (item.media) {
+          html += buildGallery(item.media);
+        }
+
+        section.innerHTML = html;
+        mainContainer.appendChild(section);
+      });
+    }
+
+    function renderArt(sectionId, artGroups) {
+      const mainContainer = document.getElementById('main-content');
+      const section = document.createElement('section');
+      section.id = sectionId;
+      section.className = 'content-section';
+
+      let html = `<h2>My 3D Art</h2>`;
+      artGroups.forEach(group => {
+        html += `<h3>${group.title}</h3>`;
+        if (group.description) html += `<p>${group.description}</p>`;
+        if (group.images) {
+          const mediaImages = group.images.map(img => ({ type: 'image', src: img.src, alt: img.alt }));
+          html += buildGallery(mediaImages);
+        }
+      });
+
+      section.innerHTML = html;
+      mainContainer.appendChild(section);
+    }
+
+    function buildGallery(mediaList) {
+      let html = `<div class="tool-gallery">`;
+      mediaList.forEach(m => {
+        html += `<div class="card">`;
+        if (m.type === 'image') {
+          html += `<img src="${m.src}" alt="${m.alt || ''}" class="zoomable">`;
+        } else if (m.type === 'youtube') {
+          html += `<div class="video-container">
+            <iframe src="${m.src}" title="${m.title || ''}" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+          </div>`;
+        } else if (m.type === 'video') {
+          const autoplay = m.autoplay !== false ? 'autoplay' : '';
+          html += `<div class="video-container">
+            <video controls ${autoplay} muted loop playsinline style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover;">
+              <source src="${m.src}" type="video/mp4">
+            </video>
+          </div>`;
+        }
+        html += `</div>`;
+      });
+      html += `</div>`;
+      return html;
+    }
+
+    // Dynamic Lightbox Initialization
+    let zoomableImages = [];
+    let currentIndex = 0;
+
+    function initLightbox() {
+      zoomableImages = document.querySelectorAll('.zoomable');
+      const lightbox = document.getElementById('lightbox');
+      const lightboxImg = document.getElementById('lightbox-img');
+      const closeBtn = document.getElementById('close');
+      const prevBtn = document.getElementById('prev');
+      const nextBtn = document.getElementById('next');
+
+      zoomableImages.forEach((img, index) => {
+        img.addEventListener('click', () => {
+          currentIndex = index;
+          lightboxImg.src = zoomableImages[currentIndex].src;
+          lightbox.style.display = 'flex';
+        });
+      });
+
+      function showImage(index) {
+        currentIndex = index;
+        lightboxImg.src = zoomableImages[currentIndex].src;
       }
-    });
 
-    document.addEventListener('keydown', (e) => {
-      if (e.key === "Escape") {
-        lightbox.style.display = 'none';
-      }
-      if (e.key === "ArrowLeft") {
-        prevBtn.click();
-      }
-      if (e.key === "ArrowRight") {
-        nextBtn.click();
-      }
-    });
+      closeBtn.onclick = () => { lightbox.style.display = 'none'; };
+      prevBtn.onclick = () => {
+        currentIndex = (currentIndex - 1 + zoomableImages.length) % zoomableImages.length;
+        showImage(currentIndex);
+      };
+      nextBtn.onclick = () => {
+        currentIndex = (currentIndex + 1) % zoomableImages.length;
+        showImage(currentIndex);
+      };
+
+      lightbox.onclick = (e) => {
+        if (e.target === lightbox) lightbox.style.display = 'none';
+      };
+
+      document.onkeydown = (e) => {
+        if (lightbox.style.display === 'flex') {
+          if (e.key === "Escape") lightbox.style.display = 'none';
+          if (e.key === "ArrowLeft") prevBtn.click();
+          if (e.key === "ArrowRight") nextBtn.click();
+        }
+      };
+    }
+
+    // Load data on start
+    document.addEventListener('DOMContentLoaded', loadPortfolio);
   </script>
 
 </body>
