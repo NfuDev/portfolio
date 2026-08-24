@@ -41,6 +41,33 @@
       vertical-align: middle;
     }
 
+    /* Social Links Styling */
+    .social-links {
+      display: flex;
+      align-items: center;
+      gap: 1.2rem;
+    }
+
+    .social-link {
+      color: #b0b0b0;
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: color 0.2s ease, transform 0.2s ease;
+    }
+
+    .social-link:hover {
+      color: #00adb5;
+      transform: translateY(-2px);
+    }
+
+    .social-link svg {
+      width: 22px;
+      height: 22px;
+      fill: currentColor;
+    }
+
     /* Layout Wrapper */
     .layout-wrapper {
       display: flex;
@@ -156,30 +183,52 @@
       color: #ffffff;
     }
 
+    /* Large Stacked Media Cards Layout */
     .tool-gallery {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-      gap: 1.5rem;
-      margin-top: 1rem;
-      margin-bottom: 2rem;
+      display: flex;
+      flex-direction: column;
+      gap: 2rem;
+      margin-top: 1.5rem;
+      margin-bottom: 2.5rem;
     }
 
     .card {
       background: #1e1e1e;
       border-radius: 10px;
-      padding: 1rem;
-      box-shadow: 0 4px 10px rgba(0,0,0,0.4);
-      transition: transform 0.2s;
-    }
-
-    .card:hover {
-      transform: translateY(-5px);
-      cursor: pointer;
+      padding: 1.25rem;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.4);
+      width: 100%;
+      box-sizing: border-box;
     }
 
     .card img {
-      max-width: 100%;
+      width: 100%;
+      height: auto;
       border-radius: 8px;
+      display: block;
+      cursor: pointer;
+    }
+
+    .video-container {
+      position: relative;
+      padding-bottom: 56.25%; /* 16:9 Aspect Ratio */
+      height: 0;
+      overflow: hidden;
+      border-radius: 8px;
+    }
+    
+    .video-container iframe,
+    .video-container video {
+      position: absolute;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      border: 0;
+    }
+
+    .media-caption {
+      margin-top: 0.75rem;
+      font-size: 0.95rem;
+      color: #b0b0b0;
     }
 
     footer {
@@ -190,13 +239,13 @@
       border-top: 1px solid #2a2a2a;
     }
 
-    /* Lightbox overlay */
+    /* Lightbox Overlay */
     #lightbox {
       display: none;
       position: fixed;
       top: 0; left: 0;
       width: 100%; height: 100%;
-      background: rgba(0,0,0,0.8);
+      background: rgba(0,0,0,0.85);
       backdrop-filter: blur(5px);
       justify-content: center;
       align-items: center;
@@ -211,7 +260,6 @@
       box-shadow: 0 0 20px rgba(0,0,0,0.7);
     }
 
-    /* Close button */
     #lightbox #close {
       position: absolute;
       top: 20px;
@@ -225,7 +273,6 @@
       color: #00adb5;
     }
 
-    /* Navigation arrows */
     .arrow {
       position: absolute;
       top: 50%;
@@ -241,19 +288,6 @@
     }
     #prev { left: 40px; }
     #next { right: 40px; }
-    
-    .video-container {
-      position: relative;
-      padding-bottom: 56.25%;
-      height: 0;
-      overflow: hidden;
-    }
-    
-    .video-container iframe {
-      position: absolute;
-      top: 0; left: 0;
-      width: 100%; height: 100%;
-    }
 
     .steam-button {
       display: inline-block;
@@ -272,7 +306,7 @@
       box-shadow: 0 4px 12px rgba(0,0,0,0.25);
     }
 
-    /* Responsive CSS for mobile devices */
+    /* Mobile Responsiveness */
     @media (max-width: 768px) {
       .layout-wrapper {
         flex-direction: column;
@@ -281,11 +315,13 @@
         width: 100%;
         position: static;
         height: auto;
+        max-height: 220px;
         box-sizing: border-box;
       }
       header {
         flex-direction: column;
         text-align: center;
+        gap: 1rem;
         padding: 1rem;
       }
       header h1 {
@@ -298,9 +334,6 @@
       }
       .main-container {
         padding: 1rem;
-      }
-      .tool-gallery {
-        grid-template-columns: 1fr;
       }
       #lightbox #close {
         top: 10px;
@@ -318,44 +351,37 @@
 
   <header>
     <h1><img src="Resources/Nightfall.png" alt="Yep this is me">Othman Abdalla - Nightfall16</h1>
+    
+    <div class="social-links">
+      <!-- ArtStation -->
+      <a href="https://nighfall16.artstation.com/" target="_blank" rel="noopener" class="social-link" title="ArtStation">
+        <svg viewBox="0 0 24 24"><path d="M0 17.723l2.027 3.51h.001a2.424 2.424 0 002.164 1.333h13.457l-2.79-4.843H0zm24 .023a2.422 2.422 0 00-.288-1.164l-9.522-16.5a2.426 2.426 0 00-2.098-1.215H7.548l13.13 22.748A2.43 2.43 0 0024 17.746zM11.23 12.18l-2.827-4.902-5.59 9.69h11.242l-2.825-4.788z"/></svg>
+      </a>
+
+      <!-- YouTube -->
+      <a href="https://www.youtube.com/@arrowsdev" target="_blank" rel="noopener" class="social-link" title="YouTube">
+        <svg viewBox="0 0 24 24"><path d="M23.498 6.186a3.016 3.016 0 00-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 00.502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 002.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 002.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>
+      </a>
+
+      <!-- LinkedIn -->
+      <a href="https://www.linkedin.com/in/othman-abdalla-145324232/" target="_blank" rel="noopener" class="social-link" title="LinkedIn">
+        <svg viewBox="0 0 24 24"><path d="M19 3a2 2 0 012 2v14a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h14m-.5 15.5v-5.3a3.26 3.26 0 00-3.26-3.26c-.85 0-1.84.52-2.28 1.3v-1.11h-2.79v8.37h2.79v-4.93c0-.77.62-1.4 1.39-1.4a1.4 1.4 0 011.4 1.4v4.93h2.75M6.88 8.56a1.68 1.68 0 001.68-1.68c0-.93-.75-1.69-1.68-1.69a1.69 1.69 0 00-1.69 1.69c0 .93.76 1.68 1.69 1.68m1.39 9.94v-8.37H5.5v8.37h2.77z"/></svg>
+      </a>
+
+      <!-- Instagram -->
+      <a href="https://www.instagram.com/nightfall_ue/" target="_blank" rel="noopener" class="social-link" title="Instagram">
+        <svg viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
+      </a>
+    </div>
+
     <script data-goatcounter="https://othman.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
   </header>
 
   <div class="layout-wrapper">
     <!-- Side Panel -->
     <aside class="sidebar">
-      <ul class="sidebar-menu">
-        <li class="sidebar-item">
-          <button class="sidebar-btn active" onclick="showSection('about', this)">About Me</button>
-        </li>
-
-        <li class="sidebar-item">
-          <button class="sidebar-btn dropdown-btn" onclick="toggleDropdown('editor-dropdown', this)">
-            <span>Editor Tools</span>
-            <span class="arrow-icon">&#9660;</span>
-          </button>
-          <ul class="dropdown-container" id="editor-dropdown"></ul>
-        </li>
-
-        <li class="sidebar-item">
-          <button class="sidebar-btn dropdown-btn" onclick="toggleDropdown('gamedev-dropdown', this)">
-            <span>Game Dev Tools</span>
-            <span class="arrow-icon">&#9660;</span>
-          </button>
-          <ul class="dropdown-container" id="gamedev-dropdown"></ul>
-        </li>
-
-        <li class="sidebar-item">
-          <button class="sidebar-btn dropdown-btn" onclick="toggleDropdown('projects-dropdown', this)">
-            <span>Game Projects</span>
-            <span class="arrow-icon">&#9660;</span>
-          </button>
-          <ul class="dropdown-container" id="projects-dropdown"></ul>
-        </li>
-
-        <li class="sidebar-item">
-          <button class="sidebar-btn" onclick="showSection('Art', this)">My 3D Art</button>
-        </li>
+      <ul class="sidebar-menu" id="sidebar-menu">
+        <!-- Dynamically populated from portfolio.json -->
       </ul>
     </aside>
 
@@ -401,17 +427,71 @@
       btn.classList.toggle('open');
     }
 
+    // Formats JSON keys like "gameJams" into readable titles "Game Jams"
+    function formatTitle(key) {
+      const known = {
+        editorTools: "Editor Tools",
+        gameDevTools: "Game Dev Tools",
+        gameProjects: "Game Projects",
+        art: "My 3D Art"
+      };
+      if (known[key]) return known[key];
+      const result = key.replace(/([A-Z])/g, " $1");
+      return result.charAt(0).toUpperCase() + result.slice(1);
+    }
+
     // Dynamic Portfolio Loader
     async function loadPortfolio() {
       try {
         const response = await fetch('portfolio.json');
         const data = await response.json();
         
-        renderAbout(data.about);
-        renderCategory('editor-dropdown', data.editorTools);
-        renderCategory('gamedev-dropdown', data.gameDevTools);
-        renderCategory('projects-dropdown', data.gameProjects);
-        renderArt('Art', data.art);
+        const sidebarMenu = document.getElementById('sidebar-menu');
+        const mainContainer = document.getElementById('main-content');
+
+        sidebarMenu.innerHTML = '';
+        mainContainer.innerHTML = '';
+
+        // 1. Render About Me
+        if (data.about) {
+          sidebarMenu.innerHTML += `
+            <li class="sidebar-item">
+              <button class="sidebar-btn active" onclick="showSection('about', this)">About Me</button>
+            </li>
+          `;
+          renderAbout(data.about);
+        }
+
+        // 2. Dynamically process all categories from portfolio.json
+        let categoryIndex = 0;
+        for (const [key, value] of Object.entries(data)) {
+          if (key === 'about' || !Array.isArray(value)) continue;
+
+          const title = formatTitle(key);
+          const dropdownId = `dropdown-${categoryIndex++}`;
+
+          if (key === 'art') {
+            const li = document.createElement('li');
+            li.className = 'sidebar-item';
+            li.innerHTML = `<button class="sidebar-btn" onclick="showSection('Art', this)">${title}</button>`;
+            sidebarMenu.appendChild(li);
+
+            renderArt('Art', title, value);
+          } else {
+            const li = document.createElement('li');
+            li.className = 'sidebar-item';
+            li.innerHTML = `
+              <button class="sidebar-btn dropdown-btn" onclick="toggleDropdown('${dropdownId}', this)">
+                <span>${title}</span>
+                <span class="arrow-icon">&#9660;</span>
+              </button>
+              <ul class="dropdown-container" id="${dropdownId}"></ul>
+            `;
+            sidebarMenu.appendChild(li);
+
+            renderCategory(dropdownId, value);
+          }
+        }
 
         initLightbox();
       } catch (err) {
@@ -425,11 +505,15 @@
       section.id = 'about';
       section.className = 'content-section active';
 
-      let html = `<h2>${about.title}</h2>`;
-      about.paragraphs.forEach(p => { html += `<p>${p}</p>`; });
-      about.sections.forEach(s => {
-        html += `<h4>${s.heading}</h4><p>${s.content}</p>`;
-      });
+      let html = `<h2>${about.title || 'About Me'}</h2>`;
+      if (about.paragraphs) {
+        about.paragraphs.forEach(p => { html += `<p>${p}</p>`; });
+      }
+      if (about.sections) {
+        about.sections.forEach(s => {
+          html += `<h4>${s.heading}</h4><p>${s.content}</p>`;
+        });
+      }
 
       section.innerHTML = html;
       main.appendChild(section);
@@ -440,7 +524,7 @@
       const mainContainer = document.getElementById('main-content');
 
       items.forEach(item => {
-        // Build Sidebar Button
+        // Build Sidebar Link
         const li = document.createElement('li');
         li.innerHTML = `<button class="sidebar-btn" onclick="showSection('${item.id}', this)">${item.title}</button>`;
         dropdownContainer.appendChild(li);
@@ -470,6 +554,10 @@
           html += `</ul>`;
         }
 
+        if (item.media) {
+          html += buildGallery(item.media);
+        }
+
         if (item.subsections) {
           item.subsections.forEach(sub => {
             html += `<h3>${sub.title}</h3>`;
@@ -478,22 +566,18 @@
           });
         }
 
-        if (item.media) {
-          html += buildGallery(item.media);
-        }
-
         section.innerHTML = html;
         mainContainer.appendChild(section);
       });
     }
 
-    function renderArt(sectionId, artGroups) {
+    function renderArt(sectionId, title, artGroups) {
       const mainContainer = document.getElementById('main-content');
       const section = document.createElement('section');
       section.id = sectionId;
       section.className = 'content-section';
 
-      let html = `<h2>My 3D Art</h2>`;
+      let html = `<h2>${title}</h2>`;
       artGroups.forEach(group => {
         html += `<h3>${group.title}</h3>`;
         if (group.description) html += `<p>${group.description}</p>`;
@@ -520,10 +604,13 @@
         } else if (m.type === 'video') {
           const autoplay = m.autoplay !== false ? 'autoplay' : '';
           html += `<div class="video-container">
-            <video controls ${autoplay} muted loop playsinline style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover;">
+            <video controls ${autoplay} muted loop playsinline>
               <source src="${m.src}" type="video/mp4">
             </video>
           </div>`;
+        }
+        if (m.title || m.alt) {
+          html += `<div class="media-caption">${m.title || m.alt}</div>`;
         }
         html += `</div>`;
       });
@@ -558,10 +645,12 @@
 
       closeBtn.onclick = () => { lightbox.style.display = 'none'; };
       prevBtn.onclick = () => {
+        if (zoomableImages.length === 0) return;
         currentIndex = (currentIndex - 1 + zoomableImages.length) % zoomableImages.length;
         showImage(currentIndex);
       };
       nextBtn.onclick = () => {
+        if (zoomableImages.length === 0) return;
         currentIndex = (currentIndex + 1) % zoomableImages.length;
         showImage(currentIndex);
       };
