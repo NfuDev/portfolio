@@ -704,6 +704,24 @@
           "alt": "Lion model for a client nft project",
           "w": 695,
           "h": 626
+        },
+        {
+          "src": "Resources/img/screenshot-2025-03-04-211911.avif",
+          "alt": "Doshka1",
+          "w": 820,
+          "h": 969
+        },
+        {
+          "src": "Resources/img/screenshot-2025-03-04-212512.avif",
+          "alt": "Doshka2",
+          "w": 743,
+          "h": 734
+        },
+        {
+          "src": "Resources/img/screenshot-2025-03-04-211511.avif",
+          "alt": "Doshka3",
+          "w": 1691,
+          "h": 973
         }
       ],
       "description": "characters i made for personal projects of learning"
@@ -773,6 +791,48 @@
           "h": 293
         }
       ]
+    },
+    {
+      "title": "Characters WIP",
+      "images": [
+        {
+          "src": "Resources/img/screenshot-2024-12-09-095333.avif",
+          "alt": "Viking Sculpt1",
+          "w": 1562,
+          "h": 887
+        },
+        {
+          "src": "Resources/img/screenshot-2024-12-09-095533.avif",
+          "alt": "Viking Sculpt2",
+          "w": 1616,
+          "h": 884
+        },
+        {
+          "src": "Resources/img/screenshot-2024-12-09-095548.avif",
+          "alt": "Viking Sculpt3",
+          "w": 1607,
+          "h": 914
+        },
+        {
+          "src": "Resources/img/screenshot-2025-03-28-223754.avif",
+          "alt": "Jotaro fan art1",
+          "w": 1353,
+          "h": 886
+        },
+        {
+          "src": "Resources/img/screenshot-2025-03-28-224147.avif",
+          "alt": "Jotaro fan art2",
+          "w": 987,
+          "h": 882
+        },
+        {
+          "src": "Resources/img/screenshot-2025-03-28-224203.avif",
+          "alt": "Jotaro fan art3",
+          "w": 1076,
+          "h": 916
+        }
+      ],
+      "description": "unfinished characters and sculpts"
     }
   ]
 }
