@@ -1,0 +1,1159 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="darkreader-lock">
+  <title>Portfolio Manager for Nightfall16</title>
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            brand: {
+              bg: '#060711',
+              card: '#0d0f22',
+              cardHover: '#141733',
+              border: '#23274d',
+              cyan: '#22d3ee',
+              purple: '#c084fc',
+              accent: '#38bdf8'
+            }
+          },
+          fontFamily: {
+            sans: ['Inter', 'sans-serif'],
+            display: ['Space Grotesk', 'sans-serif']
+          }
+        }
+      }
+    }
+  </script>
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap">
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <style>
+    body {
+      background-color: #060711;
+      color: #f8fafc;
+      font-family: 'Inter', sans-serif;
+    }
+    h1, h2, h3, h4, .font-display {
+      font-family: 'Space Grotesk', sans-serif;
+    }
+    ::-webkit-scrollbar { width: 8px; height: 8px; }
+    ::-webkit-scrollbar-track { background: #060711; }
+    ::-webkit-scrollbar-thumb { background: #23274d; border-radius: 4px; }
+    ::-webkit-scrollbar-thumb:hover { background: #22d3ee; }
+  </style>
+</head>
+<body class="min-h-screen flex flex-col bg-[#060711] text-slate-100 selection:bg-cyan-500 selection:text-black">
+
+  <!-- Toast Notification Container -->
+  <div id="toast-container" class="fixed bottom-6 right-6 z-50 flex flex-col gap-3 pointer-events-none"></div>
+
+  <!-- Top Header -->
+  <header class="border-b border-[#23274d] bg-[#0d0f22]/90 backdrop-blur-md sticky top-0 z-40">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+      <div class="flex items-center gap-3">
+        <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-cyan-400 to-purple-500 flex items-center justify-center shadow-lg shadow-cyan-500/20 font-display font-bold text-lg text-black">
+          N16
+        </div>
+        <div>
+          <h1 class="font-display font-bold text-lg tracking-wide flex items-center gap-2 text-white">
+            Portfolio Manager <span class="text-xs px-2 py-0.5 rounded-full bg-cyan-500/10 text-cyan-400 border border-cyan-500/30">Local Admin</span>
+          </h1>
+          <p class="text-xs text-slate-400">Manage & update <code class="text-cyan-400 font-mono">portfolio.json</code> for Othman Abdalla</p>
+        </div>
+      </div>
+
+      <div class="flex items-center gap-2 sm:gap-3">
+        <button onclick="openStatusModal()" id="conv-status" class="px-3 py-1.5 rounded-full text-xs font-medium flex items-center gap-2 border bg-slate-500/10 text-slate-300 border-slate-500/30 transition-all" title="Click for details">
+          <span id="conv-dot" class="w-2 h-2 rounded-full bg-slate-400"></span><span id="conv-text">Checking…</span>
+        </button>
+        <span id="save-status" class="hidden md:inline-flex items-center gap-1.5 text-xs px-3 py-1.5 rounded-full border bg-slate-500/10 text-slate-300 border-slate-500/30">
+          <span id="save-dot" class="w-2 h-2 rounded-full bg-slate-400"></span><span id="save-text">…</span>
+        </span>
+        <a href="index.html" target="_blank" rel="noopener" class="px-3.5 py-2 rounded-xl bg-[#141733] hover:bg-[#1b1f3c] border border-[#23274d] text-slate-200 text-xs font-semibold flex items-center gap-2 transition-all">
+          <i data-lucide="external-link" class="w-4 h-4"></i><span class="hidden sm:inline">Open site</span>
+        </a>
+        <button onclick="downloadJson()" class="px-4 py-2 rounded-xl bg-gradient-to-r from-cyan-400 to-blue-500 text-black font-semibold text-xs flex items-center gap-2 shadow-lg shadow-cyan-500/20 hover:opacity-95 transition-all" title="Optional backup copy. When the manager is connected, portfolio.json is saved automatically.">
+          <i data-lucide="download" class="w-4 h-4 text-black"></i>
+          <span class="hidden sm:inline">Download portfolio.json</span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Navigation Tabs -->
+  <nav class="border-b border-[#23274d] bg-[#0d0f22]/50 backdrop-blur sticky top-16 z-30 overflow-x-auto">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex gap-2 sm:gap-4 no-scrollbar py-2">
+      <button onclick="switchTab('profile')" id="tab-btn-profile" class="tab-btn px-4 py-2 rounded-xl text-sm font-medium flex items-center gap-2 transition-all whitespace-nowrap bg-cyan-500/10 text-cyan-400 border border-cyan-500/30 shadow-sm">
+        <i data-lucide="user" class="w-4 h-4"></i> Profile & About
+      </button>
+      <button onclick="switchTab('editorTools')" id="tab-btn-editorTools" class="tab-btn px-4 py-2 rounded-xl text-sm font-medium flex items-center gap-2 transition-all whitespace-nowrap text-slate-400 hover:text-white hover:bg-[#141733]">
+        <i data-lucide="wrench" class="w-4 h-4"></i> Editor Tools (<span id="count-editorTools">0</span>)
+      </button>
+      <button onclick="switchTab('gameDevTools')" id="tab-btn-gameDevTools" class="tab-btn px-4 py-2 rounded-xl text-sm font-medium flex items-center gap-2 transition-all whitespace-nowrap text-slate-400 hover:text-white hover:bg-[#141733]">
+        <i data-lucide="cpu" class="w-4 h-4"></i> Game Dev Tools (<span id="count-gameDevTools">0</span>)
+      </button>
+      <button onclick="switchTab('gameProjects')" id="tab-btn-gameProjects" class="tab-btn px-4 py-2 rounded-xl text-sm font-medium flex items-center gap-2 transition-all whitespace-nowrap text-slate-400 hover:text-white hover:bg-[#141733]">
+        <i data-lucide="gamepad-2" class="w-4 h-4"></i> Game Projects (<span id="count-gameProjects">0</span>)
+      </button>
+      <button onclick="switchTab('art')" id="tab-btn-art" class="tab-btn px-4 py-2 rounded-xl text-sm font-medium flex items-center gap-2 transition-all whitespace-nowrap text-slate-400 hover:text-white hover:bg-[#141733]">
+        <i data-lucide="palette" class="w-4 h-4"></i> Art Showcase (<span id="count-art">0</span>)
+      </button>
+      <button onclick="switchTab('json')" id="tab-btn-json" class="tab-btn px-4 py-2 rounded-xl text-sm font-medium flex items-center gap-2 transition-all whitespace-nowrap text-slate-400 hover:text-white hover:bg-[#141733]">
+        <i data-lucide="code" class="w-4 h-4"></i> Live JSON & Import
+      </button>
+    </div>
+  </nav>
+
+  <!-- Main Content Container -->
+  <main class="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8">
+
+    <!-- Shown only when this page is NOT talking to tools/manager-server.py -->
+    <div id="offline-banner" class="hidden mb-8 rounded-2xl border border-amber-500/40 bg-amber-500/10 p-5 sm:p-6">
+      <div class="flex items-start gap-4">
+        <div class="p-2.5 rounded-xl bg-amber-500/15 text-amber-300 border border-amber-500/30 flex-shrink-0"><i data-lucide="alert-triangle" class="w-5 h-5"></i></div>
+        <div class="space-y-3 text-sm text-amber-100/90">
+          <p class="font-display font-bold text-base text-amber-200">The manager is not connected to your project folder</p>
+          <p class="leading-relaxed">Browsing files, converting them and saving <code class="text-amber-200">portfolio.json</code> need the small helper program. Close this tab and <strong class="text-white">double-click <code>start-manager.bat</code></strong> in your portfolio folder (Mac/Linux: <code>./start-manager.sh</code>). It opens this page again, connected.</p>
+          <p class="leading-relaxed text-amber-100/70">Until then you can still edit, but nothing is saved to disk. Use <em>Download portfolio.json</em> to keep your changes.</p>
+          <button onclick="pickJsonFile()" class="px-3.5 py-2 rounded-xl bg-amber-400 hover:bg-amber-300 text-black font-semibold text-xs">Load portfolio.json from my computer…</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- TAB 1: PROFILE & ABOUT -->
+    <div id="tab-profile" class="tab-content space-y-8">
+      <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        <div class="lg:col-span-2 bg-[#0d0f22] border border-[#23274d] rounded-2xl p-6 sm:p-8 shadow-xl">
+          <div class="flex items-center justify-between mb-6 pb-4 border-b border-[#23274d]">
+            <div class="flex items-center gap-3">
+              <div class="p-2.5 rounded-xl bg-cyan-500/10 text-cyan-400 border border-cyan-500/20"><i data-lucide="user-check" class="w-5 h-5"></i></div>
+              <div>
+                <h2 class="font-display font-bold text-lg text-white">Profile Configuration</h2>
+                <p class="text-xs text-slate-400">Edit hero section credentials</p>
+              </div>
+            </div>
+            <button onclick="saveProfileForm()" class="px-4 py-2 bg-cyan-400 hover:bg-cyan-300 text-black font-semibold text-xs rounded-xl transition-all shadow-md shadow-cyan-500/20">Save Changes</button>
+          </div>
+
+          <form id="profile-form" class="space-y-5" onsubmit="event.preventDefault(); saveProfileForm();">
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div><label class="block text-xs font-medium text-slate-300 mb-1.5">Full Name</label><input type="text" id="prof-name" class="w-full bg-[#060711] border border-[#23274d] rounded-xl px-4 py-2.5 text-sm text-slate-100 focus:outline-none focus:border-cyan-400"></div>
+              <div><label class="block text-xs font-medium text-slate-300 mb-1.5">Handle / Tag</label><input type="text" id="prof-handle" class="w-full bg-[#060711] border border-[#23274d] rounded-xl px-4 py-2.5 text-sm text-slate-100 focus:outline-none focus:border-cyan-400"></div>
+            </div>
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div><label class="block text-xs font-medium text-slate-300 mb-1.5">Role / Title</label><input type="text" id="prof-role" class="w-full bg-[#060711] border border-[#23274d] rounded-xl px-4 py-2.5 text-sm text-slate-100 focus:outline-none focus:border-cyan-400"></div>
+              <div><label class="block text-xs font-medium text-slate-300 mb-1.5">Experience</label><input type="text" id="prof-experience" class="w-full bg-[#060711] border border-[#23274d] rounded-xl px-4 py-2.5 text-sm text-slate-100 focus:outline-none focus:border-cyan-400"></div>
+            </div>
+            <div><label class="block text-xs font-medium text-slate-300 mb-1.5">Tagline</label><textarea id="prof-tagline" rows="2" class="w-full bg-[#060711] border border-[#23274d] rounded-xl px-4 py-2.5 text-sm text-slate-100 focus:outline-none focus:border-cyan-400"></textarea></div>
+          </form>
+        </div>
+
+        <div class="bg-[#0d0f22] border border-[#23274d] rounded-2xl p-6 sm:p-8 shadow-xl flex flex-col">
+          <div class="flex items-center justify-between mb-6 pb-4 border-b border-[#23274d]">
+            <div class="flex items-center gap-3">
+              <div class="p-2.5 rounded-xl bg-purple-500/10 text-purple-400 border border-purple-500/20"><i data-lucide="book-open" class="w-5 h-5"></i></div>
+              <h2 class="font-display font-bold text-lg text-white">About Section</h2>
+            </div>
+            <button onclick="saveAboutForm()" class="px-4 py-2 bg-purple-500 hover:bg-purple-400 text-white font-semibold text-xs rounded-xl shadow-md shadow-purple-500/20">Save</button>
+          </div>
+          <form id="about-form" class="space-y-4 flex-1 flex flex-col" onsubmit="event.preventDefault(); saveAboutForm();">
+            <div><label class="block text-xs font-medium text-slate-300 mb-1.5">Title</label><input type="text" id="about-title" class="w-full bg-[#060711] border border-[#23274d] rounded-xl px-4 py-2.5 text-sm text-slate-100 focus:outline-none focus:border-purple-400"></div>
+            <div><label class="block text-xs font-medium text-slate-300 mb-1.5">Main Paragraph</label><textarea id="about-paragraph" rows="4" class="w-full bg-[#060711] border border-[#23274d] rounded-xl px-4 py-2.5 text-sm text-slate-100 focus:outline-none focus:border-purple-400"></textarea></div>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <!-- TAB 2: EDITOR TOOLS -->
+    <div id="tab-editorTools" class="tab-content hidden space-y-6">
+      <div class="flex items-center justify-between">
+        <div><h2 class="font-display font-bold text-2xl text-white">Unreal Editor Tools</h2><p class="text-sm text-slate-400">Custom Unreal Engine editor extensions.</p></div>
+        <button onclick="openProjectModal('editorTools', null)" class="px-4 py-2.5 bg-cyan-400 hover:bg-cyan-300 text-black font-semibold text-sm rounded-xl flex items-center gap-2 shadow-lg shadow-cyan-500/20">+ Add Editor Tool</button>
+      </div>
+      <div id="grid-editorTools" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"></div>
+    </div>
+
+    <!-- TAB 3: GAME DEV TOOLS -->
+    <div id="tab-gameDevTools" class="tab-content hidden space-y-6">
+      <div class="flex items-center justify-between">
+        <div><h2 class="font-display font-bold text-2xl text-white">Game Dev Tools & Plugins</h2><p class="text-sm text-slate-400">AI systems, time manipulation & combat plugins.</p></div>
+        <button onclick="openProjectModal('gameDevTools', null)" class="px-4 py-2.5 bg-cyan-400 hover:bg-cyan-300 text-black font-semibold text-sm rounded-xl flex items-center gap-2 shadow-lg shadow-cyan-500/20">+ Add Game Dev Tool</button>
+      </div>
+      <div id="grid-gameDevTools" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"></div>
+    </div>
+
+    <!-- TAB 4: GAME PROJECTS -->
+    <div id="tab-gameProjects" class="tab-content hidden space-y-6">
+      <div class="flex items-center justify-between">
+        <div><h2 class="font-display font-bold text-2xl text-white">Game Projects</h2><p class="text-sm text-slate-400">Commercial titles, hackathon games & prototypes.</p></div>
+        <button onclick="openProjectModal('gameProjects', null)" class="px-4 py-2.5 bg-cyan-400 hover:bg-cyan-300 text-black font-semibold text-sm rounded-xl flex items-center gap-2 shadow-lg shadow-cyan-500/20">+ Add Game Project</button>
+      </div>
+      <div id="grid-gameProjects" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"></div>
+    </div>
+
+    <!-- TAB 5: ART SHOWCASE -->
+    <div id="tab-art" class="tab-content hidden space-y-6">
+      <div class="flex items-center justify-between">
+        <div><h2 class="font-display font-bold text-2xl text-white">Art Showcase (Character Art)</h2><p class="text-sm text-slate-400">Character designs, Fiverr commissions & badges. Every category automatically ends with a “More on Instagram / ArtStation” tile on the site.</p></div>
+        <button onclick="openArtModal(null)" class="px-4 py-2.5 bg-cyan-400 hover:bg-cyan-300 text-black font-semibold text-sm rounded-xl flex items-center gap-2 shadow-lg shadow-cyan-500/20">+ Add Art Category</button>
+      </div>
+      <div id="grid-art" class="grid grid-cols-1 gap-6"></div>
+    </div>
+
+    <!-- TAB 6: JSON & EXPORT -->
+    <div id="tab-json" class="tab-content hidden space-y-6">
+      <div class="flex items-center justify-between">
+        <div><h2 class="font-display font-bold text-2xl text-white">Live JSON & Import / Export</h2><p class="text-sm text-slate-400">Inspect payload and export.</p></div>
+        <button onclick="downloadJson()" class="px-4 py-2.5 bg-gradient-to-r from-cyan-400 to-blue-500 text-black font-semibold text-sm rounded-xl flex items-center gap-2 shadow-lg shadow-cyan-500/20">Download portfolio.json</button>
+      </div>
+      <div class="bg-[#0d0f22] border border-[#23274d] rounded-2xl p-6 shadow-xl space-y-4">
+        <textarea id="json-textarea" rows="22" spellcheck="false" class="w-full bg-[#060711] border border-[#23274d] rounded-xl p-4 font-mono text-xs text-slate-200 focus:outline-none focus:border-cyan-400"></textarea>
+        <div class="flex flex-wrap gap-3">
+          <button onclick="applyJsonText()" class="px-4 py-2 rounded-xl bg-cyan-400 hover:bg-cyan-300 text-black font-semibold text-xs">Apply edited JSON</button>
+          <button onclick="pickJsonFile()" class="px-4 py-2 rounded-xl bg-[#141733] hover:bg-[#1b1f3c] border border-[#23274d] text-slate-200 text-xs font-semibold">Load a portfolio.json file…</button>
+        </div>
+      </div>
+    </div>
+
+  </main>
+
+  <!-- CONVERTER STATUS MODAL -->
+  <div id="status-modal" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm hidden items-center justify-center p-4">
+    <div class="bg-[#0d0f22] border border-[#23274d] rounded-2xl max-w-xl w-full p-6 shadow-2xl space-y-5">
+      <div class="flex items-center justify-between pb-3 border-b border-[#23274d]">
+        <div class="flex items-center gap-3">
+          <div class="p-2 rounded-xl bg-purple-500/10 text-purple-400 border border-purple-500/20"><i data-lucide="wand-2" class="w-5 h-5"></i></div>
+          <h3 class="font-display font-bold text-lg text-white">Converter status</h3>
+        </div>
+        <button onclick="closeStatusModal()" class="text-slate-400 hover:text-white"><i data-lucide="x" class="w-5 h-5"></i></button>
+      </div>
+      <div id="status-body" class="space-y-3 text-sm"></div>
+      <div class="flex justify-end pt-2">
+        <button onclick="closeStatusModal()" class="px-5 py-2 bg-purple-600 hover:bg-purple-500 text-white font-semibold rounded-xl text-xs">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- PROJECT / TOOL EDITOR MODAL -->
+  <div id="project-modal" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm hidden items-center justify-center p-4 overflow-y-auto">
+    <div class="bg-[#0d0f22] border border-[#23274d] rounded-2xl max-w-3xl w-full max-h-[90vh] flex flex-col shadow-2xl overflow-hidden my-auto">
+      <div class="p-6 border-b border-[#23274d] flex items-center justify-between bg-[#141733]/60">
+        <div class="flex items-center gap-3">
+          <div class="p-2 rounded-xl bg-cyan-500/10 text-cyan-400 border border-cyan-500/20"><i data-lucide="edit-3" class="w-5 h-5"></i></div>
+          <h3 id="modal-title" class="font-display font-bold text-lg text-white">Edit Entry</h3>
+        </div>
+        <button onclick="closeProjectModal()" class="text-slate-400 hover:text-white"><i data-lucide="x" class="w-5 h-5"></i></button>
+      </div>
+
+      <div class="p-6 overflow-y-auto space-y-6 flex-1">
+        <input type="hidden" id="edit-section-key"><input type="hidden" id="edit-item-index" value="-1">
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div><label class="block text-xs font-medium text-slate-300 mb-1">ID</label><input type="text" id="edit-id" class="w-full bg-[#060711] border border-[#23274d] rounded-xl px-4 py-2.5 text-sm text-slate-100 focus:outline-none focus:border-cyan-400"></div>
+          <div><label class="block text-xs font-medium text-slate-300 mb-1">Title</label><input type="text" id="edit-title" class="w-full bg-[#060711] border border-[#23274d] rounded-xl px-4 py-2.5 text-sm text-slate-100 focus:outline-none focus:border-cyan-400"></div>
+        </div>
+        <div><label class="block text-xs font-medium text-slate-300 mb-1">Summary</label><textarea id="edit-summary" rows="2" class="w-full bg-[#060711] border border-[#23274d] rounded-xl px-4 py-2.5 text-sm text-slate-100 focus:outline-none focus:border-cyan-400"></textarea></div>
+        <div><label class="block text-xs font-medium text-slate-300 mb-1">Description (one paragraph per line)</label><textarea id="edit-description" rows="3" class="w-full bg-[#060711] border border-[#23274d] rounded-xl px-4 py-2.5 text-sm text-slate-100 focus:outline-none focus:border-cyan-400"></textarea></div>
+
+        <!-- FEATURES MANAGER SECTION -->
+        <div class="border-t border-[#23274d] pt-5 space-y-4">
+          <div class="flex items-center justify-between">
+            <div>
+              <h4 class="font-display font-bold text-sm text-white">Features List</h4>
+              <p class="text-xs text-slate-400">Manage feature bullet points for this tool or plugin</p>
+            </div>
+            <button type="button" onclick="addFeatureItem()" class="px-3 py-1.5 bg-purple-500/10 hover:bg-purple-500/20 text-purple-400 border border-purple-500/30 rounded-lg text-xs font-semibold">+ Add Feature</button>
+          </div>
+          <div id="features-items-container" class="space-y-2"></div>
+        </div>
+
+        <!-- MEDIA -->
+        <div class="border-t border-[#23274d] pt-5 space-y-4">
+          <div>
+            <h4 class="font-display font-bold text-sm text-white">Media</h4>
+            <p class="text-xs text-slate-400">Browse for images and videos: they are converted and copied into <code class="text-cyan-400">Resources/</code> for you. For YouTube, paste the link.</p>
+          </div>
+          <div id="media-drop" class="dropzone rounded-xl border-2 border-dashed border-[#2f356b] bg-[#060711] p-5 text-center space-y-3 transition-colors">
+            <p class="text-xs text-slate-300">Drop images or videos here, or</p>
+            <div class="flex flex-wrap justify-center gap-2">
+              <button type="button" onclick="browseMedia()" class="px-4 py-2 bg-cyan-400 hover:bg-cyan-300 text-black font-semibold rounded-lg text-xs flex items-center gap-2"><i data-lucide="folder-open" class="w-4 h-4"></i> Browse images &amp; videos…</button>
+              <button type="button" onclick="addYoutube()" class="px-4 py-2 bg-red-500/10 hover:bg-red-500/20 text-red-300 border border-red-500/30 rounded-lg text-xs font-semibold">+ YouTube link</button>
+            </div>
+            <label class="inline-flex items-center gap-2 text-[11px] text-slate-400 cursor-pointer"><input type="checkbox" id="opt-av1" checked class="accent-cyan-400"> Also make the smaller AV1 copy of videos (slower, best quality for size)</label>
+          </div>
+          <div id="media-items-container" class="space-y-3"></div>
+        </div>
+      </div>
+
+      <div class="p-6 border-t border-[#23274d] bg-[#141733]/60 flex justify-end gap-3">
+        <button type="button" onclick="closeProjectModal()" class="px-4 py-2 rounded-xl bg-[#060711] text-slate-300 text-xs border border-[#23274d]">Cancel</button>
+        <button type="button" id="project-save-btn" onclick="saveProjectModal()" class="px-5 py-2 rounded-xl bg-cyan-400 hover:bg-cyan-300 text-black font-semibold text-xs shadow-lg shadow-cyan-500/20 disabled:opacity-50 disabled:cursor-not-allowed">Save Entry</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ART CATEGORY MODAL -->
+  <div id="art-modal" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm hidden items-center justify-center p-4 overflow-y-auto">
+    <div class="bg-[#0d0f22] border border-[#23274d] rounded-2xl max-w-3xl w-full max-h-[90vh] flex flex-col shadow-2xl overflow-hidden my-auto">
+      <div class="p-6 border-b border-[#23274d] flex items-center justify-between">
+        <h3 id="art-modal-title" class="font-display font-bold text-lg text-white">Edit Art Category</h3>
+        <button onclick="closeArtModal()" class="text-slate-400 hover:text-white"><i data-lucide="x" class="w-5 h-5"></i></button>
+      </div>
+      <div class="p-6 overflow-y-auto space-y-5 flex-1">
+        <input type="hidden" id="edit-art-index" value="-1">
+        <div><label class="block text-xs font-medium text-slate-300 mb-1">Category Title</label><input type="text" id="edit-art-title" class="w-full bg-[#060711] border border-[#23274d] rounded-xl px-4 py-2 text-sm text-slate-100 focus:outline-none focus:border-purple-400"></div>
+        <div><label class="block text-xs font-medium text-slate-300 mb-1">Description <span class="text-slate-500">(optional, simple HTML like &lt;strong&gt; works)</span></label><textarea id="edit-art-desc" rows="2" class="w-full bg-[#060711] border border-[#23274d] rounded-xl px-4 py-2 text-sm text-slate-100 focus:outline-none focus:border-purple-400"></textarea></div>
+        <div class="border-t border-[#23274d] pt-5 space-y-4">
+          <div>
+            <h4 class="font-display font-bold text-sm text-white">Images</h4>
+            <p class="text-xs text-slate-400">Browse for images: they are converted to AVIF and copied into <code class="text-cyan-400">Resources/img/</code>. The caption shows in the viewer.</p>
+          </div>
+          <div id="art-drop" class="dropzone rounded-xl border-2 border-dashed border-[#2f356b] bg-[#060711] p-5 text-center space-y-3 transition-colors">
+            <p class="text-xs text-slate-300">Drop images here, or</p>
+            <button type="button" onclick="browseArt()" class="px-4 py-2 bg-purple-500 hover:bg-purple-400 text-white font-semibold rounded-lg text-xs inline-flex items-center gap-2"><i data-lucide="folder-open" class="w-4 h-4"></i> Browse images…</button>
+          </div>
+          <div id="art-images-container" class="grid grid-cols-2 sm:grid-cols-3 gap-3"></div>
+        </div>
+      </div>
+      <div class="p-4 border-t border-[#23274d] flex justify-end gap-3">
+        <button onclick="closeArtModal()" class="px-4 py-2 bg-[#060711] rounded-xl text-xs text-slate-300 border border-[#23274d]">Cancel</button>
+        <button id="art-save-btn" onclick="saveArtModal()" class="px-5 py-2 bg-purple-600 hover:bg-purple-500 text-white font-semibold rounded-xl text-xs disabled:opacity-50 disabled:cursor-not-allowed">Save Category</button>
+      </div>
+    </div>
+  </div>
+
+  <input type="file" id="file-picker" class="hidden">
+
+  <style>
+    .dropzone.drag { border-color: #22d3ee; background: rgba(34, 211, 238, 0.06); }
+    @keyframes indeterminate { 0% { margin-left: -40%; } 100% { margin-left: 100%; } }
+    .bar-indeterminate > span { width: 40%; animation: indeterminate 1.1s linear infinite; }
+  </style>
+
+  <script>
+    /* =====================================================================
+       Portfolio manager.
+       Talks to tools/manager-server.py (start-manager.bat) which saves portfolio.json
+       and converts uploads. Without it the page still opens, but cannot save or convert.
+       ===================================================================== */
+
+    const $ = (id) => document.getElementById(id);
+    const esc = (s) => String(s ?? '').replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+    const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
+
+    const API = { connected: false, status: null };
+    let portfolioData = emptyData();
+    let dataLoaded = false;
+
+    function emptyData() {
+      return {
+        profile: { name: '', handle: '', role: '', experience: '', tagline: '', avatar: {}, socials: [] },
+        about: { title: '', paragraphs: [''], sections: [] },
+        editorTools: [], gameDevTools: [], gameProjects: [], art: []
+      };
+    }
+
+    /* ---------- thumbnails ---------- */
+
+    const PLACEHOLDER = 'data:image/svg+xml;utf8,' + encodeURIComponent(
+      '<svg xmlns="http://www.w3.org/2000/svg" width="160" height="90" viewBox="0 0 160 90"><rect width="160" height="90" fill="#0d0f22"/><path d="M58 60l15-19 11 13 8-9 12 15z" fill="#23274d"/><text x="80" y="80" fill="#22d3ee" font-family="sans-serif" font-size="8" text-anchor="middle">no preview</text></svg>');
+
+    const thumbOf = (src) => String(src || '').replace(/\.avif$/, '-720.avif');
+
+    // Shows the small -720 version if it exists, then the full file, then a placeholder.
+    function thumbImg(src, cls = 'w-full h-full object-cover') {
+      return `<img src="${esc(thumbOf(src))}" data-full="${esc(src)}" class="${cls}" alt="" onerror="thumbFallback(this)">`;
+    }
+    function thumbFallback(el) {
+      const tries = +el.dataset.tries || 0;
+      el.dataset.tries = tries + 1;
+      if (tries === 0 && el.dataset.full && el.getAttribute('src') !== el.dataset.full) el.src = el.dataset.full;
+      else { el.onerror = null; el.src = PLACEHOLDER; }
+    }
+
+    const ytId = (url) => {
+      const s = String(url || '').trim();
+      return (s.match(/(?:embed\/|v=|youtu\.be\/|shorts\/|live\/)([\w-]{11})/) || s.match(/^([\w-]{11})$/) || [])[1];
+    };
+    const ytThumb = (id) => `https://i.ytimg.com/vi/${id}/mqdefault.jpg`;
+    const ytEmbed = (id) => `https://www.youtube.com/embed/${id}`;
+
+    /* ---------- toasts ---------- */
+
+    function showToast(message, type = 'success') {
+      const toast = document.createElement('div');
+      const ok = type === 'success';
+      toast.className = `pointer-events-auto max-w-sm px-4 py-3 rounded-xl border backdrop-blur-md shadow-xl text-xs font-medium flex items-start gap-3 ${ok ? 'bg-emerald-500/10 text-emerald-300 border-emerald-500/30' : 'bg-red-500/10 text-red-300 border-red-500/30'}`;
+      toast.innerHTML = `<i data-lucide="${ok ? 'check-circle' : 'alert-triangle'}" class="w-4 h-4 flex-shrink-0 mt-0.5"></i><span>${esc(message)}</span>`;
+      $('toast-container').appendChild(toast);
+      lucide.createIcons();
+      setTimeout(() => toast.remove(), ok ? 3500 : 7000);
+    }
+
+    /* ---------- server connection + saving ---------- */
+
+    async function detectServer() {
+      try {
+        const r = await fetch('/api/status', { cache: 'no-store' });
+        if (r.ok && (r.headers.get('content-type') || '').includes('json')) {
+          API.status = await r.json();
+          API.connected = true;
+        }
+      } catch (e) { /* opened as a plain file, or no server */ }
+    }
+
+    async function loadData() {
+      try {
+        const r = await fetch(API.connected ? '/api/portfolio' : 'portfolio.json', { cache: 'no-store' });
+        if (r.ok) { portfolioData = await r.json(); dataLoaded = true; return; }
+      } catch (e) { /* fall through */ }
+      if (API.connected) showToast('Could not read portfolio.json. Nothing will be saved until it loads.', 'error');
+    }
+
+    const SAVE_STYLES = {
+      saved: ['bg-emerald-500/10 text-emerald-300 border-emerald-500/30', 'bg-emerald-400'],
+      saving: ['bg-amber-500/10 text-amber-300 border-amber-500/30', 'bg-amber-400 animate-pulse'],
+      error: ['bg-red-500/10 text-red-300 border-red-500/30', 'bg-red-400'],
+      offline: ['bg-slate-500/10 text-slate-300 border-slate-500/30', 'bg-slate-400']
+    };
+    function setSaveStatus(state, text) {
+      const [box, dot] = SAVE_STYLES[state];
+      $('save-status').className = `hidden md:inline-flex items-center gap-1.5 text-xs px-3 py-1.5 rounded-full border ${box}`;
+      $('save-dot').className = `w-2 h-2 rounded-full ${dot}`;
+      $('save-text').textContent = text;
+    }
+
+    let saveTimer = null, saveInFlight = false, saveQueued = false, savePending = false;
+
+    function persistData() {
+      updateCounts();
+      updateJsonTextarea();
+      if (!API.connected || !dataLoaded) { setSaveStatus('offline', 'Not saved to disk'); return; }
+      savePending = true;
+      setSaveStatus('saving', 'Saving…');
+      clearTimeout(saveTimer);
+      saveTimer = setTimeout(flushSave, 250);
+    }
+
+    async function flushSave() {
+      if (saveInFlight) { saveQueued = true; return; }
+      saveInFlight = true; savePending = false;
+      try {
+        const r = await fetch('/api/portfolio', {
+          method: 'POST',
+          headers: { 'X-Manager': '1', 'Content-Type': 'application/json' },
+          body: JSON.stringify(portfolioData)
+        });
+        const j = await r.json().catch(() => ({}));
+        if (!r.ok) throw new Error(j.error || `Server answered ${r.status}`);
+        if (!savePending && !saveQueued) setSaveStatus('saved', 'Saved to portfolio.json');
+      } catch (e) {
+        setSaveStatus('error', 'Save failed');
+        showToast(`Could not save portfolio.json: ${e.message === 'Failed to fetch' ? 'the manager window seems to be closed' : e.message}`, 'error');
+      } finally {
+        saveInFlight = false;
+        if (saveQueued) { saveQueued = false; flushSave(); }
+      }
+    }
+
+    window.addEventListener('beforeunload', (e) => {
+      if (savePending || saveInFlight || pendings.some((p) => !p.error)) e.preventDefault();
+    });
+    // Dropping a file outside a drop zone would make the browser open it and leave the manager.
+    ['dragover', 'drop'].forEach((ev) => window.addEventListener(ev, (e) => e.preventDefault()));
+
+    /* ---------- converter status ---------- */
+
+    function renderConverterPill() {
+      const pill = $('conv-status'), dot = $('conv-dot'), text = $('conv-text');
+      let cls, dotCls, label;
+      if (!API.connected) { cls = 'bg-red-500/10 text-red-300 border-red-500/30'; dotCls = 'bg-red-400'; label = 'Not connected'; }
+      else if (API.status.problems.length) { cls = 'bg-amber-500/10 text-amber-300 border-amber-500/30'; dotCls = 'bg-amber-400'; label = 'Check setup'; }
+      else { cls = 'bg-emerald-500/10 text-emerald-300 border-emerald-500/30'; dotCls = 'bg-emerald-400'; label = 'Converter ready'; }
+      pill.className = `px-3 py-1.5 rounded-full text-xs font-medium flex items-center gap-2 border transition-all ${cls}`;
+      dot.className = `w-2 h-2 rounded-full ${dotCls}`;
+      text.textContent = label;
+    }
+
+    function openStatusModal() {
+      const s = API.status;
+      const row = (ok, title, detail) => `<div class="flex items-start gap-3 p-3 rounded-xl bg-[#060711] border border-[#23274d]">
+          <i data-lucide="${ok === true ? 'check-circle' : ok === 'optional' ? 'info' : 'alert-triangle'}" class="w-4 h-4 mt-0.5 flex-shrink-0 ${ok === true ? 'text-emerald-400' : ok === 'optional' ? 'text-slate-400' : 'text-amber-400'}"></i>
+          <div><div class="text-slate-100 font-medium">${title}</div><div class="text-xs text-slate-400 mt-0.5">${detail}</div></div></div>`;
+      let html;
+      if (!API.connected) {
+        html = `<p class="text-slate-300 leading-relaxed">This page is not connected to the helper program, so Browse, conversion and saving are off.</p>
+          <p class="text-slate-300 leading-relaxed">Close this tab, then double-click <code class="text-cyan-400">start-manager.bat</code> in your portfolio folder (Mac/Linux: <code class="text-cyan-400">./start-manager.sh</code>). Keep its window open while you work.</p>`;
+      } else {
+        html = row(s.pillow && s.avif, 'Images → AVIF', s.pillow && s.avif ? `Ready (Pillow ${esc(s.pillowVersion)})` : 'Needs Pillow 11.2 or newer')
+          + row(s.ffmpeg, 'Videos → H.264', s.ffmpeg ? 'Ready (ffmpeg found)' : 'ffmpeg was not found on PATH')
+          + row(s.av1 ? true : 'optional', 'Videos → AV1 (smaller)', s.av1 ? 'Ready' : 'Not available: videos will be H.264 only');
+        if (s.problems.length) html += `<div class="space-y-2 pt-1">${s.problems.map((p) => `<p class="text-xs text-amber-200/90 leading-relaxed bg-amber-500/10 border border-amber-500/20 rounded-lg p-3 select-all">${esc(p)}</p>`).join('')}<p class="text-xs text-slate-400">After fixing, close the manager window and start it again.</p></div>`;
+        else html += '<p class="text-xs text-slate-400">Everything you add with Browse is converted for you and copied to Resources/.</p>';
+      }
+      $('status-body').innerHTML = html;
+      $('status-modal').classList.remove('hidden'); $('status-modal').classList.add('flex');
+      lucide.createIcons();
+    }
+    function closeStatusModal() { $('status-modal').classList.add('hidden'); $('status-modal').classList.remove('flex'); }
+
+    /* ---------- tabs / counts / boot ---------- */
+
+    function switchTab(tabId) {
+      document.querySelectorAll('.tab-content').forEach((el) => el.classList.add('hidden'));
+      document.querySelectorAll('.tab-btn').forEach((btn) => btn.className = 'tab-btn px-4 py-2 rounded-xl text-sm font-medium flex items-center gap-2 transition-all whitespace-nowrap text-slate-400 hover:text-white hover:bg-[#141733]');
+      $(`tab-${tabId}`).classList.remove('hidden');
+      $(`tab-btn-${tabId}`).className = 'tab-btn px-4 py-2 rounded-xl text-sm font-medium flex items-center gap-2 transition-all whitespace-nowrap bg-cyan-500/10 text-cyan-400 border border-cyan-500/30 shadow-sm';
+      if (tabId === 'json') updateJsonTextarea();
+    }
+
+    function updateCounts() {
+      ['editorTools', 'gameDevTools', 'gameProjects', 'art'].forEach((k) => { $(`count-${k}`).innerText = portfolioData[k]?.length || 0; });
+    }
+
+    function renderAll() {
+      renderProfileForm(); renderAboutForm();
+      ['editorTools', 'gameDevTools', 'gameProjects'].forEach(renderProjectsGrid);
+      renderArtGrid(); updateCounts(); updateJsonTextarea();
+      lucide.createIcons();
+    }
+
+    window.onload = async function () {
+      await detectServer();
+      await loadData();
+      $('offline-banner').classList.toggle('hidden', API.connected);
+      renderConverterPill();
+      if (API.connected) setSaveStatus('saved', 'Connected · saves automatically');
+      else setSaveStatus('offline', 'Not saved to disk');
+      renderAll();
+      setupDrop('media-drop', 'media');
+      setupDrop('art-drop', 'art');
+    };
+
+    /* ---------- profile / about ---------- */
+
+    function renderProfileForm() {
+      const p = portfolioData.profile || {};
+      $('prof-name').value = p.name || ''; $('prof-handle').value = p.handle || '';
+      $('prof-role').value = p.role || ''; $('prof-experience').value = p.experience || '';
+      $('prof-tagline').value = p.tagline || '';
+    }
+    function saveProfileForm() {
+      if (!portfolioData.profile) portfolioData.profile = {};
+      Object.assign(portfolioData.profile, {
+        name: $('prof-name').value, handle: $('prof-handle').value, role: $('prof-role').value,
+        experience: $('prof-experience').value, tagline: $('prof-tagline').value
+      });
+      persistData(); showToast('Profile saved.');
+    }
+    function renderAboutForm() {
+      const a = portfolioData.about || {};
+      $('about-title').value = a.title || ''; $('about-paragraph').value = a.paragraphs?.[0] || '';
+    }
+    function saveAboutForm() {
+      if (!portfolioData.about) portfolioData.about = {};
+      portfolioData.about.title = $('about-title').value;
+      // Only the first paragraph is edited here; any further paragraphs are kept.
+      const rest = (portfolioData.about.paragraphs || []).slice(1);
+      portfolioData.about.paragraphs = [$('about-paragraph').value, ...rest];
+      persistData(); showToast('About section saved.');
+    }
+
+    /* ---------- project cards ---------- */
+
+    function coverHtml(item) {
+      const media = [...(item.media || []), ...(item.subsections || []).flatMap((s) => s.media || [])];
+      const own = media.find((m) => (m.type === 'image' && m.src) || (m.type === 'video' && m.poster));
+      if (own) return thumbImg(own.type === 'image' ? own.src : own.poster);
+      const yt = media.find((m) => m.type === 'youtube' && ytId(m.src));
+      if (yt) return `<img src="${ytThumb(ytId(yt.src))}" class="w-full h-full object-cover" alt="" onerror="this.onerror=null;this.src=PLACEHOLDER">`;
+      return '';
+    }
+
+    function renderProjectsGrid(sectionKey) {
+      const grid = $(`grid-${sectionKey}`);
+      const items = portfolioData[sectionKey] || [];
+      grid.innerHTML = '';
+      if (items.length === 0) {
+        grid.innerHTML = '<div class="col-span-full py-12 text-center text-slate-400 bg-[#0d0f22] border border-[#23274d] rounded-2xl">No entries found.</div>';
+        return;
+      }
+      items.forEach((item, index) => {
+        const mediaCount = (item.media || []).length + (item.subsections || []).reduce((n, s) => n + (s.media || []).length, 0);
+        const cover = coverHtml(item);
+        const card = document.createElement('div');
+        card.className = 'bg-[#0d0f22] border border-[#23274d] hover:border-cyan-400/50 rounded-2xl p-6 flex flex-col justify-between shadow-xl transition-all group overflow-hidden';
+        card.innerHTML = `
+          <div>
+            ${cover ? `<div class="aspect-video -mx-6 -mt-6 mb-5 overflow-hidden bg-[#060711] border-b border-[#23274d]">${cover}</div>` : ''}
+            <div class="flex items-start justify-between gap-3 mb-3">
+              <div class="min-w-0">
+                <span class="text-[10px] font-mono px-2.5 py-1 rounded-full bg-cyan-500/10 text-cyan-400 border border-cyan-500/20">${esc(item.id || 'no-id')}</span>
+                <h3 class="font-display font-bold text-lg text-white mt-2">${esc(item.title)}</h3>
+              </div>
+              <div class="flex items-center gap-1 flex-shrink-0">
+                <button onclick="openProjectModal('${sectionKey}', ${index})" class="p-2 rounded-lg bg-[#141733] hover:bg-cyan-500/20 text-slate-300 hover:text-cyan-400 transition-colors" title="Edit"><i data-lucide="edit-2" class="w-4 h-4"></i></button>
+                <button onclick="deleteProjectItem('${sectionKey}', ${index})" class="p-2 rounded-lg bg-[#141733] hover:bg-red-500/20 text-slate-300 hover:text-red-400 transition-colors" title="Delete"><i data-lucide="trash-2" class="w-4 h-4"></i></button>
+              </div>
+            </div>
+            <p class="text-xs text-slate-400 line-clamp-3 mb-4 leading-relaxed">${esc(item.summary || '')}</p>
+          </div>
+          <div class="pt-4 border-t border-[#23274d] flex items-center justify-between text-xs text-slate-400">
+            <span class="flex items-center gap-1.5"><i data-lucide="film" class="w-3.5 h-3.5 text-cyan-400"></i> ${mediaCount} media items</span>
+            <span class="flex items-center gap-1.5"><i data-lucide="list" class="w-3.5 h-3.5 text-purple-400"></i> ${(item.features || []).length} features</span>
+          </div>`;
+        grid.appendChild(card);
+      });
+      lucide.createIcons();
+    }
+
+    /* ---------- art cards ---------- */
+
+    function renderArtGrid() {
+      const grid = $('grid-art');
+      const cats = portfolioData.art || [];
+      grid.innerHTML = '';
+      if (cats.length === 0) {
+        grid.innerHTML = '<div class="py-12 text-center text-slate-400 bg-[#0d0f22] border border-[#23274d] rounded-2xl">No art categories found.</div>';
+        return;
+      }
+      cats.forEach((cat, index) => {
+        const card = document.createElement('div');
+        card.className = 'bg-[#0d0f22] border border-[#23274d] rounded-2xl p-6 shadow-xl space-y-4';
+        const imgs = (cat.images || []).map((img) => `
+          <div class="relative rounded-xl overflow-hidden bg-[#060711] border border-[#23274d] aspect-square flex items-center justify-center" title="${esc(img.alt || '')}">
+            ${thumbImg(img.src)}
+            <span class="absolute bottom-1 right-1 bg-black/80 text-[9px] font-mono px-1.5 py-0.5 rounded text-cyan-400">${img.w}x${img.h}</span>
+          </div>`).join('');
+        card.innerHTML = `
+          <div class="flex items-center justify-between gap-3">
+            <div class="min-w-0">
+              <h3 class="font-display font-bold text-lg text-white">${esc(cat.title)}</h3>
+              ${cat.description ? `<p class="text-xs text-slate-400 mt-1">${cat.description.replace(/<[^>]*>/g, '')}</p>` : ''}
+            </div>
+            <div class="flex items-center gap-2 flex-shrink-0">
+              <button onclick="openArtModal(${index})" class="px-3 py-1.5 rounded-lg bg-[#141733] hover:bg-purple-500/20 text-slate-200 hover:text-purple-300 text-xs font-semibold flex items-center gap-1"><i data-lucide="edit-2" class="w-3.5 h-3.5"></i> Edit</button>
+              <button onclick="deleteArtCategory(${index})" class="px-3 py-1.5 rounded-lg bg-[#141733] hover:bg-red-500/20 text-red-400 text-xs font-semibold flex items-center gap-1"><i data-lucide="trash-2" class="w-3.5 h-3.5"></i> Delete</button>
+            </div>
+          </div>
+          <div class="grid grid-cols-3 sm:grid-cols-5 md:grid-cols-8 gap-3">${imgs || '<p class="text-xs text-slate-500 col-span-full">No images yet. Click Edit to add some.</p>'}</div>`;
+        grid.appendChild(card);
+      });
+      lucide.createIcons();
+    }
+
+    /* =====================================================================
+       Uploads: Browse -> server converts + copies into Resources/ -> result lands in the list
+       ===================================================================== */
+
+    const IMG_EXT = /\.(png|jpe?g|webp|gif|bmp|tiff?|avif)$/i;
+    const VID_EXT = /\.(mp4|mov|m4v|mkv|webm|avi|wmv)$/i;
+    const fileKind = (f) => (IMG_EXT.test(f.name) ? 'image' : VID_EXT.test(f.name) ? 'video' : null);
+
+    let pendings = [];            // uploads in flight (or failed), shown as cards in the open modal
+    let pendingId = 0;
+    const queues = { image: Promise.resolve(), video: Promise.resolve() };
+
+    function pickFiles({ accept, multiple }, callback) {
+      const input = $('file-picker');
+      input.value = '';
+      input.accept = accept;
+      input.multiple = !!multiple;
+      input.onchange = () => { const files = [...input.files]; input.value = ''; if (files.length) callback(files); };
+      input.click();
+    }
+
+    function xhrPost(url, body, onProgress) {
+      return new Promise((resolve, reject) => {
+        const x = new XMLHttpRequest();
+        x.open('POST', url);
+        x.setRequestHeader('X-Manager', '1');
+        x.upload.onprogress = (e) => e.lengthComputable && onProgress(e.loaded / e.total);
+        x.onload = () => {
+          let j = {};
+          try { j = JSON.parse(x.responseText); } catch (e) { /* not json */ }
+          x.status >= 200 && x.status < 300 ? resolve(j) : reject(new Error(j.error || `Server answered ${x.status}`));
+        };
+        x.onerror = () => reject(new Error('Lost the connection to the manager window. Is it still open?'));
+        x.send(body);
+      });
+    }
+
+    async function pollJob(p, id) {
+      for (;;) {
+        await sleep(700);
+        const r = await fetch(`/api/job?id=${id}`, { cache: 'no-store' });
+        const j = await r.json();
+        if (!r.ok) throw new Error(j.error || 'Lost track of the conversion job');
+        p.label = j.label + (j.steps > 1 && j.state === 'running' ? ` (step ${j.step} of ${j.steps})` : '');
+        p.pct = j.state === 'running' ? j.pct : 100;
+        paintPending(p);
+        if (j.state === 'done') return j.result;
+        if (j.state === 'error') throw new Error(j.error);
+      }
+    }
+
+    // ctx: 'media' | 'art'.  onDone(result) decides where the converted file goes.
+    function startUploads(files, ctx, onDone) {
+      if (!API.connected) { showToast('Start the manager with start-manager.bat first: Browse and conversion need it.', 'error'); return; }
+      files.forEach((file) => {
+        const kind = fileKind(file);
+        if (!kind) { showToast(`${file.name}: not an image or video type I can convert.`, 'error'); return; }
+        if (ctx === 'art' && kind === 'video') { showToast(`${file.name}: art categories only take images.`, 'error'); return; }
+        const p = { id: ++pendingId, ctx, kind, name: file.name, label: 'Waiting for its turn…', pct: null, error: null };
+        pendings.push(p);
+        refreshPending(ctx);
+        $(`pend-${p.id}`)?.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        queues[kind] = queues[kind].then(() => runUpload(p, file, onDone));
+      });
+    }
+
+    async function runUpload(p, file, onDone) {
+      if (!pendings.includes(p)) return;          // modal was closed before its turn
+      try {
+        const video = p.kind === 'video';
+        p.label = 'Uploading…'; p.pct = 0; paintPending(p);
+        const url = video
+          ? `/api/upload-video?name=${encodeURIComponent(file.name)}&av1=${$('opt-av1').checked ? 1 : 0}`
+          : `/api/upload-image?name=${encodeURIComponent(file.name)}`;
+        let result = await xhrPost(url, file, (f) => {
+          p.pct = Math.round(f * 100); p.label = f < 1 ? `Uploading ${p.pct}%` : (video ? 'Starting…' : 'Converting to AVIF…');
+          if (f >= 1 && !video) p.pct = null;
+          paintPending(p);
+        });
+        if (video) result = await pollJob(p, result.job);
+        if (!pendings.includes(p)) { showToast(`${file.name} finished converting but the window was closed, so it was not added.`, 'error'); return; }
+        pendings = pendings.filter((x) => x !== p);
+        onDone(result);
+        refreshPending(p.ctx);
+        if (result.note) showToast(result.note, 'error');
+      } catch (e) {
+        p.error = e.message; p.pct = null; paintPending(p); updateSaveButtons();
+      }
+    }
+
+    const pendingOf = (ctx) => pendings.filter((p) => p.ctx === ctx);
+
+    function pendingCardHtml(p) {
+      const bar = p.pct == null ? 'bar-indeterminate' : '';
+      return `<div id="pend-${p.id}" class="bg-[#060711] border ${p.error ? 'border-red-500/40' : 'border-[#23274d]'} rounded-xl p-4 flex items-center gap-4">
+        <div class="w-10 h-10 rounded-lg bg-[#0d0f22] border border-[#23274d] flex items-center justify-center flex-shrink-0 ${p.error ? 'text-red-400' : 'text-cyan-400'}">
+          <i data-lucide="${p.error ? 'alert-triangle' : (p.kind === 'video' ? 'film' : 'image')}" class="w-5 h-5 ${p.error ? '' : 'animate-pulse'}"></i></div>
+        <div class="flex-1 min-w-0 space-y-1.5">
+          <div class="text-xs text-slate-200 font-medium truncate">${esc(p.name)}</div>
+          ${p.error
+            ? `<div class="text-[11px] text-red-300 leading-relaxed">${esc(p.error)}</div>`
+            : `<div class="text-[11px] text-slate-400" data-label>${esc(p.label)}</div>
+               <div class="h-1.5 rounded-full bg-[#141733] overflow-hidden ${bar}" data-bar><span class="block h-full bg-gradient-to-r from-cyan-400 to-purple-400 rounded-full" style="${p.pct == null ? '' : `width:${p.pct}%`}"></span></div>`}
+        </div>
+        ${p.error ? `<button type="button" onclick="dismissPending(${p.id})" class="p-1.5 rounded-lg bg-[#0d0f22] hover:bg-[#141733] text-slate-300 text-[11px] font-semibold px-3">Dismiss</button>` : ''}
+      </div>`;
+    }
+
+    // Update one pending card in place so progress does not rebuild the whole list.
+    function paintPending(p) {
+      const el = $(`pend-${p.id}`);
+      if (!el || p.error) return refreshPending(p.ctx);
+      el.querySelector('[data-label]').textContent = p.label;
+      const bar = el.querySelector('[data-bar]');
+      bar.classList.toggle('bar-indeterminate', p.pct == null);
+      bar.firstElementChild.style.width = p.pct == null ? '' : `${p.pct}%`;
+    }
+    function dismissPending(id) { const p = pendings.find((x) => x.id === id); pendings = pendings.filter((x) => x.id !== id); if (p) refreshPending(p.ctx); }
+    function refreshPending(ctx) { ctx === 'media' ? renderMediaItemsEditor() : renderArtImagesEditor(); }
+
+    function updateSaveButtons() {
+      const busy = (ctx) => pendingOf(ctx).filter((p) => !p.error).length;
+      const m = busy('media'), a = busy('art');
+      const mb = $('project-save-btn'), ab = $('art-save-btn');
+      mb.disabled = m > 0; mb.textContent = m ? `Converting… (${m})` : 'Save Entry';
+      ab.disabled = a > 0; ab.textContent = a ? `Converting… (${a})` : 'Save Category';
+    }
+
+    function setupDrop(zoneId, ctx) {
+      const zone = $(zoneId);
+      ['dragenter', 'dragover'].forEach((ev) => zone.addEventListener(ev, (e) => { e.preventDefault(); zone.classList.add('drag'); }));
+      ['dragleave', 'drop'].forEach((ev) => zone.addEventListener(ev, (e) => { e.preventDefault(); zone.classList.remove('drag'); }));
+      zone.addEventListener('drop', (e) => {
+        const files = [...(e.dataTransfer?.files || [])];
+        if (files.length) startUploads(files, ctx, ctx === 'media' ? addMediaResult : addArtResult);
+      });
+    }
+
+    /* ---------- project modal ---------- */
+
+    let currentEditingMedia = [];
+    let currentEditingFeatures = [];
+
+    function openProjectModal(sectionKey, index) {
+      $('edit-section-key').value = sectionKey;
+      $('edit-item-index').value = index !== null ? index : -1;
+      pendings = pendings.filter((p) => p.ctx !== 'media');
+      if (index !== null) {
+        const item = portfolioData[sectionKey][index];
+        $('modal-title').innerText = `Edit: ${item.title}`;
+        $('edit-id').value = item.id || '';
+        $('edit-title').value = item.title || '';
+        $('edit-summary').value = item.summary || '';
+        $('edit-description').value = (item.description || []).join('\n');
+        currentEditingMedia = JSON.parse(JSON.stringify(item.media || []));
+        currentEditingFeatures = JSON.parse(JSON.stringify(item.features || []));
+      } else {
+        $('modal-title').innerText = 'Add New Entry';
+        $('edit-id').value = `${sectionKey === 'gameProjects' ? 'proj' : 'tool'}-${Date.now()}`;
+        $('edit-title').value = ''; $('edit-summary').value = ''; $('edit-description').value = '';
+        currentEditingMedia = []; currentEditingFeatures = [];
+      }
+      const modal = $('project-modal');
+      modal.classList.remove('hidden'); modal.classList.add('flex');
+      renderFeaturesEditor();
+      renderMediaItemsEditor();
+    }
+
+    function closeProjectModal(force) {
+      if (!force && pendingOf('media').some((p) => !p.error) && !confirm('Files are still being converted. Close anyway? They will not be added to this entry.')) return;
+      pendings = pendings.filter((p) => p.ctx !== 'media');
+      $('project-modal').classList.add('hidden'); $('project-modal').classList.remove('flex');
+      updateSaveButtons();
+    }
+
+    /* features */
+    function renderFeaturesEditor() {
+      const container = $('features-items-container');
+      container.innerHTML = '';
+      if (currentEditingFeatures.length === 0) {
+        container.innerHTML = '<p class="text-xs text-slate-400 italic p-3 bg-[#060711] rounded-xl border border-[#23274d]">No features added yet.</p>';
+        return;
+      }
+      currentEditingFeatures.forEach((feat, idx) => {
+        const clean = String(feat).replace(/<\/?strong>/g, '');
+        const row = document.createElement('div');
+        row.className = 'flex items-center gap-2';
+        row.innerHTML = `
+          <input type="text" value="${esc(clean)}" onchange="updateFeatureInput(${idx}, this.value)" class="flex-1 bg-[#060711] border border-[#23274d] rounded-xl px-3 py-2 text-xs text-slate-100 focus:outline-none focus:border-purple-400" placeholder="e.g. Guided Setup Wizard: A step-by-step interface...">
+          <button type="button" onclick="currentEditingFeatures.splice(${idx}, 1); renderFeaturesEditor();" class="p-2 rounded-xl bg-[#060711] hover:bg-red-500/20 text-red-400 border border-[#23274d]"><i data-lucide="trash-2" class="w-4 h-4"></i></button>`;
+        container.appendChild(row);
+      });
+      lucide.createIcons();
+    }
+    function updateFeatureInput(idx, value) {
+      // The part before the first colon becomes the bold heading of the feature.
+      if (value.includes(':') && !value.includes('<strong>')) {
+        const title = value.split(':')[0].trim();
+        const desc = value.split(':').slice(1).join(':').trim();
+        currentEditingFeatures[idx] = `<strong>${title}:</strong> ${desc}`;
+      } else currentEditingFeatures[idx] = value;
+    }
+    function addFeatureItem() { currentEditingFeatures.push('New Feature: Description here'); renderFeaturesEditor(); }
+
+    /* media */
+    const iconBtn = 'px-2.5 py-1 rounded-lg bg-[#0d0f22] hover:bg-[#141733] border border-[#23274d] text-slate-200 text-xs font-semibold disabled:opacity-30 disabled:cursor-not-allowed';
+    const dangerBtn = iconBtn + ' hover:!bg-red-500/20 !text-red-300';
+    const smallBtn = 'px-2.5 py-1.5 rounded-lg bg-[#0d0f22] hover:bg-[#141733] border border-[#23274d] text-slate-200 text-[11px] font-semibold inline-flex items-center gap-1.5';
+    const fieldCls = 'w-full bg-[#0d0f22] border border-[#23274d] rounded-lg px-3 py-1.5 text-xs text-slate-100 focus:outline-none focus:border-cyan-400';
+
+    function mediaCardHtml(m, i, total) {
+      const tag = { image: 'bg-cyan-500/10 text-cyan-400', youtube: 'bg-red-500/10 text-red-400', video: 'bg-purple-500/10 text-purple-400' }[m.type] || 'bg-slate-500/10 text-slate-300';
+      let body = '';
+      if (m.type === 'image') {
+        body = `<div class="flex items-start gap-4">
+            <div class="w-28 h-28 rounded-lg overflow-hidden bg-[#0d0f22] border border-[#23274d] flex-shrink-0 relative">
+              ${thumbImg(m.src)}
+              <span class="absolute bottom-0 inset-x-0 bg-black/80 text-[9px] text-center text-cyan-400 font-mono py-0.5">${m.w || '?'} × ${m.h || '?'}</span>
+            </div>
+            <div class="flex-1 min-w-0 space-y-2">
+              <div><label class="block text-[10px] text-slate-400 mb-1">Caption <span class="text-slate-500">(shown under the image on the site, optional)</span></label>
+                <input type="text" value="${esc(m.alt || '')}" oninput="currentEditingMedia[${i}].alt = this.value" class="${fieldCls}"></div>
+              <div class="text-[10px] font-mono text-slate-500 truncate" title="${esc(m.src)}">${esc(m.src)}</div>
+              <button type="button" onclick="replaceImage(${i})" class="${smallBtn}"><i data-lucide="folder-open" class="w-3.5 h-3.5"></i> Replace image…</button>
+            </div></div>`;
+      } else if (m.type === 'youtube') {
+        const id = ytId(m.src);
+        body = `<div class="flex items-start gap-4">
+            <div class="w-40 aspect-video rounded-lg overflow-hidden bg-black border border-[#23274d] flex-shrink-0 relative">
+              <img id="yt-thumb-${i}" src="${id ? ytThumb(id) : PLACEHOLDER}" class="w-full h-full object-cover" alt="" onerror="this.onerror=null;this.src=PLACEHOLDER">
+              <span class="absolute inset-0 flex items-center justify-center pointer-events-none"><span class="w-9 h-9 rounded-full bg-black/60 flex items-center justify-center text-white text-xs pl-0.5">▶</span></span>
+            </div>
+            <div class="flex-1 min-w-0 space-y-2">
+              <div><label class="block text-[10px] text-slate-400 mb-1">YouTube link <span class="text-slate-500">(any YouTube link works)</span></label>
+                <input type="text" value="${esc(m.src || '')}" placeholder="https://www.youtube.com/watch?v=…" oninput="ytInput(${i}, this)" onchange="ytNormalize(${i}, this)" class="${fieldCls}">
+                <p id="yt-msg-${i}" class="text-[10px] mt-1 ${id ? 'text-slate-500' : 'text-amber-300'}">${id ? `Video ${esc(id)}` : 'Paste a YouTube link to see its thumbnail.'}</p></div>
+              <div><label class="block text-[10px] text-slate-400 mb-1">Title</label>
+                <input type="text" value="${esc(m.title || '')}" oninput="currentEditingMedia[${i}].title = this.value" class="${fieldCls}"></div>
+              ${id ? `<a href="https://www.youtube.com/watch?v=${esc(id)}" target="_blank" rel="noopener" class="text-[11px] text-cyan-400 hover:underline">Open on YouTube ↗</a>` : ''}
+            </div></div>`;
+      } else if (m.type === 'video') {
+        const preview = m.poster ? thumbImg(m.poster) : `<video src="${esc(m.src)}#t=0.5" preload="metadata" muted class="w-full h-full object-cover"></video>`;
+        body = `<div class="flex items-start gap-4">
+            <button type="button" onclick="playVideoPreview(this, ${i})" class="w-40 aspect-video rounded-lg overflow-hidden bg-black border border-[#23274d] flex-shrink-0 relative group" title="Click to play a preview">
+              ${preview}
+              <span class="absolute inset-0 flex items-center justify-center"><span class="w-9 h-9 rounded-full bg-black/60 group-hover:bg-purple-500 flex items-center justify-center text-white text-xs pl-0.5 transition-colors">▶</span></span>
+            </button>
+            <div class="flex-1 min-w-0 space-y-2">
+              <div><label class="block text-[10px] text-slate-400 mb-1">Caption <span class="text-slate-500">(optional)</span></label>
+                <input type="text" value="${esc(m.title || '')}" oninput="currentEditingMedia[${i}].title = this.value" class="${fieldCls}"></div>
+              <div class="text-[10px] font-mono text-slate-500 space-y-0.5">
+                <div class="truncate" title="${esc(m.src)}">H.264: ${esc(m.src)}</div>
+                <div class="truncate">AV1: ${m.av1 ? esc(m.av1) : '— (none, the H.264 file is used for everyone)'}</div>
+                <div class="truncate">Poster: ${m.poster ? esc(m.poster) : '— none'}</div>
+              </div>
+              <div class="flex flex-wrap items-center gap-2">
+                <button type="button" onclick="replaceVideo(${i})" class="${smallBtn}"><i data-lucide="folder-open" class="w-3.5 h-3.5"></i> Replace video…</button>
+                <button type="button" onclick="replacePoster(${i})" class="${smallBtn}"><i data-lucide="image" class="w-3.5 h-3.5"></i> Choose poster…</button>
+                <label class="inline-flex items-center gap-1.5 text-[11px] text-slate-300 cursor-pointer"><input type="checkbox" ${m.autoplay !== false ? 'checked' : ''} onchange="currentEditingMedia[${i}].autoplay = this.checked" class="accent-cyan-400"> Autoplay (muted) when visible</label>
+              </div>
+            </div></div>`;
+      }
+      return `<div class="bg-[#060711] border border-[#23274d] rounded-xl p-4 space-y-3">
+          <div class="flex items-center justify-between pb-2 border-b border-[#23274d]">
+            <span class="text-[10px] font-mono px-2 py-0.5 rounded uppercase ${tag}">${esc(m.type)}</span>
+            <div class="flex items-center gap-1">
+              <button type="button" ${i === 0 ? 'disabled' : ''} onclick="moveMedia(${i}, -1)" class="${iconBtn}" title="Move up">↑</button>
+              <button type="button" ${i === total - 1 ? 'disabled' : ''} onclick="moveMedia(${i}, 1)" class="${iconBtn}" title="Move down">↓</button>
+              <button type="button" onclick="removeMedia(${i})" class="${dangerBtn}" title="Remove from this entry">Remove</button>
+            </div>
+          </div>
+          ${body}
+        </div>`;
+    }
+
+    function renderMediaItemsEditor() {
+      const container = $('media-items-container');
+      const parts = currentEditingMedia.map((m, i) => mediaCardHtml(m, i, currentEditingMedia.length));
+      pendingOf('media').forEach((p) => parts.push(pendingCardHtml(p)));
+      container.innerHTML = parts.length ? parts.join('') : '<p class="text-xs text-slate-400 italic p-3 bg-[#060711] rounded-xl border border-[#23274d]">No media yet. Browse for files or add a YouTube link above.</p>';
+      lucide.createIcons();
+      updateSaveButtons();
+    }
+
+    function moveMedia(i, d) {
+      const j = i + d;
+      if (j < 0 || j >= currentEditingMedia.length) return;
+      [currentEditingMedia[i], currentEditingMedia[j]] = [currentEditingMedia[j], currentEditingMedia[i]];
+      renderMediaItemsEditor();
+    }
+    function removeMedia(i) { currentEditingMedia.splice(i, 1); renderMediaItemsEditor(); }
+
+    /* YouTube */
+    function addYoutube() {
+      currentEditingMedia.push({ type: 'youtube', src: '', title: '' });
+      renderMediaItemsEditor();
+      const inputs = $('media-items-container').querySelectorAll('input[placeholder^="https://www.youtube"]');
+      inputs[inputs.length - 1]?.focus();
+    }
+    function ytInput(i, input) {
+      currentEditingMedia[i].src = input.value;
+      const id = ytId(input.value);
+      const img = $(`yt-thumb-${i}`), msg = $(`yt-msg-${i}`);
+      img.src = id ? ytThumb(id) : PLACEHOLDER;
+      msg.textContent = id ? `Video ${id}` : (input.value.trim() ? 'No YouTube video found in this link.' : 'Paste a YouTube link to see its thumbnail.');
+      msg.className = `text-[10px] mt-1 ${id ? 'text-slate-500' : 'text-amber-300'}`;
+    }
+    function ytNormalize(i, input) {
+      const id = ytId(input.value);
+      if (id) { currentEditingMedia[i].src = ytEmbed(id); input.value = currentEditingMedia[i].src; renderMediaItemsEditor(); }
+    }
+
+    /* Browse -> image / video */
+    function addMediaResult(r) {
+      currentEditingMedia.push(r.type === 'video' ? r : { type: 'image', src: r.src, alt: '', w: r.w, h: r.h });
+      renderMediaItemsEditor();
+    }
+    function browseMedia() {
+      pickFiles({ accept: 'image/*,video/*,.mkv,.mov,.avi,.wmv,.avif', multiple: true }, (files) => startUploads(files, 'media', addMediaResult));
+    }
+    function replaceImage(i) {
+      const item = currentEditingMedia[i];
+      pickFiles({ accept: 'image/*,.avif', multiple: false }, (files) => startUploads(files.slice(0, 1), 'media', (r) => {
+        if (!currentEditingMedia.includes(item)) return;
+        Object.assign(item, { src: r.src, w: r.w, h: r.h }); renderMediaItemsEditor();
+      }));
+    }
+    function replaceVideo(i) {
+      const item = currentEditingMedia[i];
+      pickFiles({ accept: 'video/*,.mkv,.mov,.avi,.wmv', multiple: false }, (files) => startUploads(files.slice(0, 1), 'media', (r) => {
+        if (!currentEditingMedia.includes(item)) return;
+        Object.assign(item, { src: r.src, poster: r.poster, w: r.w, h: r.h });
+        if (r.av1) item.av1 = r.av1; else delete item.av1;
+        renderMediaItemsEditor();
+      }));
+    }
+    function replacePoster(i) {
+      const item = currentEditingMedia[i];
+      pickFiles({ accept: 'image/*,.avif', multiple: false }, (files) => startUploads(files.slice(0, 1), 'media', (r) => {
+        if (!currentEditingMedia.includes(item)) return;
+        Object.assign(item, { poster: r.src, w: r.w, h: r.h }); renderMediaItemsEditor();
+      }));
+    }
+    function playVideoPreview(btn, i) {
+      const v = document.createElement('video');
+      v.src = currentEditingMedia[i].src; v.controls = true; v.autoplay = true; v.muted = true;
+      v.className = 'w-full h-full object-contain bg-black';
+      const holder = document.createElement('div');
+      holder.className = 'w-40 aspect-video rounded-lg overflow-hidden bg-black border border-[#23274d] flex-shrink-0';
+      holder.appendChild(v);
+      btn.replaceWith(holder);
+    }
+
+    /* save / delete */
+    const slugify = (s) => String(s).toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '');
+
+    function saveProjectModal() {
+      const sectionKey = $('edit-section-key').value;
+      const index = parseInt($('edit-item-index').value);
+      const list = (portfolioData[sectionKey] = portfolioData[sectionKey] || []);
+      const original = index >= 0 ? list[index] : {};
+
+      const media = JSON.parse(JSON.stringify(currentEditingMedia));
+      for (let n = 0; n < media.length; n++) {
+        if (media[n].type !== 'youtube') continue;
+        const id = ytId(media[n].src);
+        if (!id) { showToast(`Media item ${n + 1} is a YouTube entry without a valid link. Paste a link or remove it.`, 'error'); return; }
+        media[n].src = ytEmbed(id);
+      }
+
+      let id = $('edit-id').value.trim();
+      const title = $('edit-title').value.trim();
+      if (!title) { showToast('Give the entry a title first.', 'error'); return; }
+      if (index < 0 && (!id || /^(tool|proj)-\d+$/.test(id))) id = `${sectionKey === 'gameProjects' ? 'proj' : 'tool'}-${slugify(title) || Date.now()}`;
+
+      // Start from the original so nothing the form does not show (subsections, links, …) is lost.
+      const newItem = {
+        ...original,
+        id, title,
+        summary: $('edit-summary').value,
+        description: $('edit-description').value.split('\n').filter(Boolean),
+        featuresHeading: original.featuresHeading || 'Key Features',
+        features: currentEditingFeatures,
+        links: original.links || [],
+        media
+      };
+      if (index >= 0) list[index] = newItem; else list.push(newItem);
+
+      persistData(); renderProjectsGrid(sectionKey); closeProjectModal(true);
+      showToast('Entry saved.');
+    }
+
+    function deleteProjectItem(sectionKey, index) {
+      if (confirm('Delete this entry?')) {
+        portfolioData[sectionKey].splice(index, 1);
+        persistData(); renderProjectsGrid(sectionKey);
+        showToast('Entry deleted.', 'error');
+      }
+    }
+
+    /* ---------- art modal ---------- */
+
+    let artImages = [];
+
+    function openArtModal(index) {
+      pendings = pendings.filter((p) => p.ctx !== 'art');
+      const cat = index !== null && index !== undefined ? portfolioData.art[index] : null;
+      $('edit-art-index').value = cat ? index : -1;
+      $('art-modal-title').innerText = cat ? `Edit: ${cat.title}` : 'Add Art Category';
+      $('edit-art-title').value = cat?.title || '';
+      $('edit-art-desc').value = cat?.description || '';
+      artImages = JSON.parse(JSON.stringify(cat?.images || []));
+      const modal = $('art-modal');
+      modal.classList.remove('hidden'); modal.classList.add('flex');
+      renderArtImagesEditor();
+    }
+    function closeArtModal(force) {
+      if (!force && pendingOf('art').some((p) => !p.error) && !confirm('Images are still being converted. Close anyway? They will not be added.')) return;
+      pendings = pendings.filter((p) => p.ctx !== 'art');
+      $('art-modal').classList.add('hidden'); $('art-modal').classList.remove('flex');
+      updateSaveButtons();
+    }
+
+    function renderArtImagesEditor() {
+      const c = $('art-images-container');
+      const cards = artImages.map((img, i) => `
+        <div class="bg-[#060711] border border-[#23274d] rounded-xl p-2 space-y-2">
+          <div class="relative aspect-square rounded-lg overflow-hidden bg-[#0d0f22] border border-[#23274d]">
+            ${thumbImg(img.src)}
+            <span class="absolute bottom-0 inset-x-0 bg-black/80 text-[9px] text-center text-cyan-400 font-mono py-0.5">${img.w} × ${img.h}</span>
+          </div>
+          <input type="text" value="${esc(img.alt || '')}" placeholder="Caption (optional)" oninput="artImages[${i}].alt = this.value" class="${fieldCls}">
+          <div class="flex items-center justify-between">
+            <div class="flex gap-1">
+              <button type="button" ${i === 0 ? 'disabled' : ''} onclick="moveArtImage(${i}, -1)" class="${iconBtn}" title="Move earlier">←</button>
+              <button type="button" ${i === artImages.length - 1 ? 'disabled' : ''} onclick="moveArtImage(${i}, 1)" class="${iconBtn}" title="Move later">→</button>
+            </div>
+            <button type="button" onclick="artImages.splice(${i}, 1); renderArtImagesEditor();" class="${dangerBtn}" title="Remove from this entry">Remove</button>
+          </div>
+        </div>`);
+      const pend = pendingOf('art').map((p) => `<div class="col-span-full">${pendingCardHtml(p)}</div>`);
+      c.innerHTML = [...cards, ...pend].join('') || '<p class="text-xs text-slate-500 col-span-full">No images yet.</p>';
+      lucide.createIcons();
+      updateSaveButtons();
+    }
+    function moveArtImage(i, d) {
+      const j = i + d;
+      if (j < 0 || j >= artImages.length) return;
+      [artImages[i], artImages[j]] = [artImages[j], artImages[i]];
+      renderArtImagesEditor();
+    }
+    function addArtResult(r) { artImages.push({ src: r.src, alt: '', w: r.w, h: r.h }); renderArtImagesEditor(); }
+    function browseArt() {
+      pickFiles({ accept: 'image/*,.avif', multiple: true }, (files) => startUploads(files, 'art', addArtResult));
+    }
+
+    function saveArtModal() {
+      const title = $('edit-art-title').value.trim();
+      if (!title) { showToast('Give the category a title first.', 'error'); return; }
+      const index = parseInt($('edit-art-index').value);
+      if (!portfolioData.art) portfolioData.art = [];
+      const desc = $('edit-art-desc').value.trim();
+      const item = { ...(index >= 0 ? portfolioData.art[index] : {}), title, images: JSON.parse(JSON.stringify(artImages)) };
+      if (desc) item.description = desc; else delete item.description;
+      if (index >= 0) portfolioData.art[index] = item; else portfolioData.art.push(item);
+      persistData(); renderArtGrid(); closeArtModal(true);
+      showToast('Art category saved.');
+    }
+    function deleteArtCategory(index) {
+      if (confirm('Delete art category?')) {
+        portfolioData.art.splice(index, 1);
+        persistData(); renderArtGrid();
+        showToast('Art category deleted.', 'error');
+      }
+    }
+
+    /* ---------- JSON tab ---------- */
+
+    function updateJsonTextarea() { $('json-textarea').value = JSON.stringify(portfolioData, null, 2); }
+
+    function loadJsonText(text, label) {
+      let data;
+      try { data = JSON.parse(text); } catch (e) { showToast(`${label} is not valid JSON: ${e.message}`, 'error'); return; }
+      if (!data || typeof data !== 'object' || !data.profile) { showToast(`${label} does not look like a portfolio.json (no "profile" section).`, 'error'); return; }
+      if (dataLoaded && !confirm('Replace everything in the manager with this JSON?')) return;
+      portfolioData = data; dataLoaded = true;
+      renderAll(); persistData();
+      showToast('JSON loaded.');
+    }
+    function applyJsonText() { loadJsonText($('json-textarea').value, 'The text'); }
+    function pickJsonFile() {
+      pickFiles({ accept: '.json,application/json', multiple: false }, async (files) => loadJsonText(await files[0].text(), files[0].name));
+    }
+
+    function downloadJson() {
+      const blob = new Blob([JSON.stringify(portfolioData, null, 2) + '\n'], { type: 'application/json' });
+      const a = document.createElement('a');
+      a.href = URL.createObjectURL(blob); a.download = 'portfolio.json';
+      document.body.appendChild(a); a.click(); a.remove();
+      setTimeout(() => URL.revokeObjectURL(a.href), 1000);
+      showToast('portfolio.json downloaded.');
+    }
+  </script>
+</body>
+</html>

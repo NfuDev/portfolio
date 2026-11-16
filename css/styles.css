@@ -594,6 +594,92 @@ strong { color: #fff; font-weight: 600; }
 .badges .tile { width: auto; height: 200px; background: #fff; }
 .badges .tile img { height: 100%; width: auto; }
 
+/* "More on Instagram / ArtStation": last tile of every art group, one tile split into two links */
+.more-tile {
+  display: grid;
+  grid-auto-rows: 1fr;
+  gap: 1px;
+  min-height: 190px;
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+  background: var(--border-strong); /* shows through the gap as the divider between the two links */
+}
+.masonry .more-tile { break-inside: avoid; margin-bottom: 16px; aspect-ratio: 4 / 3; }
+
+.more-link {
+  --brand: var(--accent-deep);
+  position: relative;
+  isolation: isolate;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 16px 18px;
+  background: var(--surface-2);
+  color: var(--text);
+  text-decoration: none;
+  transition: color 0.25s;
+}
+.more-link::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: var(--brand);
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+.more-link:hover,
+.more-link:focus-visible { color: #fff; }
+.more-link:hover::before,
+.more-link:focus-visible::before { opacity: 1; }
+.more-link:focus-visible { outline-offset: -4px; }
+
+.more-instagram { --brand: linear-gradient(135deg, #f58529 0%, #dd2a7b 50%, #8134af 100%); --ico: #f58fb7; }
+.more-artstation { --brand: linear-gradient(135deg, #0b78b8 0%, #13aff0 100%); --ico: #4cc3f4; }
+
+.more-ico {
+  flex: none;
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.06);
+  color: var(--ico, var(--accent));
+  transition: background 0.25s, color 0.25s;
+}
+.more-ico svg { width: 22px; height: 22px; fill: currentColor; }
+.more-link:hover .more-ico,
+.more-link:focus-visible .more-ico { background: rgba(255, 255, 255, 0.22); color: #fff; }
+
+.more-text { min-width: 0; display: flex; flex-direction: column; gap: 3px; }
+.more-text strong { font: 600 1.02rem/1.2 var(--font-display); color: inherit; display: block; }
+.more-text small { font-size: 0.82rem; color: var(--muted); overflow-wrap: anywhere; transition: color 0.25s; }
+.more-link:hover small,
+.more-link:focus-visible small { color: rgba(255, 255, 255, 0.88); }
+
+.more-go {
+  flex: none;
+  display: grid;
+  place-items: center;
+  width: 34px;
+  height: 34px;
+  margin-left: auto;
+  border: 1px solid var(--border-strong);
+  border-radius: 50%;
+  transition: transform 0.25s var(--ease), border-color 0.25s, background 0.25s;
+}
+.more-go svg { width: 15px; height: 15px; fill: currentColor; }
+.more-link:hover .more-go,
+.more-link:focus-visible .more-go { transform: translate(2px, -2px); border-color: rgba(255, 255, 255, 0.7); background: rgba(255, 255, 255, 0.16); }
+
+/* badges row (Fiverr ratings): same height as the badges */
+.badges .more-tile { width: min(100%, 300px); height: 200px; min-height: 0; }
+.badges .more-link { padding: 12px 14px; gap: 12px; }
+.badges .more-ico { width: 38px; height: 38px; }
+.badges .more-text strong { font-size: 0.95rem; }
+
 /* ---------- About ---------- */
 
 .about {

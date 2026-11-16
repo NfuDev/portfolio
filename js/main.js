@@ -185,7 +185,37 @@
     });
   }
 
-  function renderArt(groups = []) {
+  /** Last tile of every art group: one tile, split in two links (Instagram on top, ArtStation below). */
+  function moreTile(profile) {
+    const social = (name) => (profile.socials || []).find((s) => s.icon === name);
+    // "@name" for instagram.com/name and for name.artstation.com (or artstation.com/name)
+    const handleOf = (url) => {
+      try {
+        const u = new URL(url);
+        const sub = u.hostname.match(/^([^.]+)\.artstation\.com$/i);
+        if (sub && sub[1].toLowerCase() !== "www") return `@${sub[1]}`;
+        const seg = u.pathname.split("/").filter(Boolean)[0];
+        return seg ? `@${seg}` : u.hostname.replace(/^www\./, "");
+      } catch { return ""; }
+    };
+    const links = [
+      { s: social("instagram"), key: "instagram", name: "Instagram", sub: (s) => handleOf(s.url) },
+      { s: social("artstation"), key: "artstation", name: "ArtStation", sub: (s) => handleOf(s.url) },
+    ].filter((l) => l.s);
+    if (!links.length) return "";
+    return `<div class="more-tile">${links
+      .map(
+        (l) => `<a class="more-link more-${l.key}" href="${esc(l.s.url)}" target="_blank" rel="noopener" aria-label="More art on ${l.name} (opens in a new tab)">
+          <span class="more-ico">${icon(l.s.icon)}</span>
+          <span class="more-text"><strong>More on ${l.name}</strong><small>${esc(l.sub(l.s))}</small></span>
+          <span class="more-go" aria-hidden="true">${icon("external")}</span>
+        </a>`
+      )
+      .join("")}</div>`;
+  }
+
+  function renderArt(groups = [], profile = {}) {
+    const more = moreTile(profile);
     $("[data-art]").innerHTML = groups
       .map((g, i) => {
         const badges = g.images.every((m) => m.w < 600);
@@ -193,7 +223,7 @@
         const sizes = badges ? "200px" : "(max-width: 760px) 100vw, 400px";
         return `<div class="art-group reveal">
             <div class="art-group-head"><h3>${esc(g.title)}</h3>${g.description ? `<p>${g.description}</p>` : ""}</div>
-            <div class="${cls}">${g.images.map((m) => tile(m, `art-${i}`, sizes)).join("")}</div>
+            <div class="${cls}">${g.images.map((m) => tile(m, `art-${i}`, sizes)).join("")}${more}</div>
           </div>`;
       })
       .join("");
@@ -473,7 +503,7 @@
     renderProfile(data);
     renderStats(data);
     renderWork();
-    renderArt(data.art);
+    renderArt(data.art, data.profile);
     renderAbout(data.about);
 
     if (reducedMotion) $$(".reveal").forEach((el) => el.classList.add("in"));
